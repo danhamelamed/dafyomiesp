@@ -3,195 +3,145 @@
 <head>
   <meta charset="UTF-8" />
   <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
+
+  <!-- Fuente hebrea David Libre de Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=David+Libre&display=swap" rel="stylesheet" />
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
-
     body {
-      font-family: 'Montserrat', sans-serif;
-      background: #f5f7fa;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-      color: #333;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 2em;
+      background: #fdfdfd;
+      color: #222;
     }
-
     #main {
-      max-width: 800px;
-      width: 95%;
-      margin: 2rem auto;
+      max-width: 850px;
+      margin: auto;
+      padding: 1em 2em;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgb(0 0 0 / 0.1);
-      padding: 2rem 3rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
     }
-
-    h1 {
+    header {
       text-align: center;
+      margin-bottom: 1.5em;
+    }
+    header img {
+      height: 80px;
+      margin: 0 15px;
+      vertical-align: middle;
+    }
+    h1 {
       font-weight: 700;
-      font-size: 2.2rem;
+      margin-top: 0.3em;
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
       color: #0072b5;
-      margin-bottom: 1rem;
     }
-
     label {
+      display: inline-block;
+      margin: 0.6em 1em 1em 0;
       font-weight: 600;
-      font-size: 1.1rem;
-      margin-right: 0.75rem;
+      font-size: 1rem;
     }
-
-    select, input[type=number] {
-      font-size: 1.1rem;
-      padding: 0.4rem 0.7rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      transition: border-color 0.3s ease;
+    select, input[type=number], button {
+      padding: 0.5em 1em;
+      font-size: 1rem;
+      margin-right: 0.5em;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+      transition: border-color 0.3s;
     }
-
-    select:focus, input[type=number]:focus {
+    select:hover, input[type=number]:hover, button:hover {
       border-color: #0072b5;
-      outline: none;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    button {
-      background: #0072b5;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 0.7rem 1.5rem;
-      font-size: 1.1rem;
-      font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgb(0 114 181 / 0.3);
-      transition: background-color 0.3s ease;
-      user-select: none;
-      flex: 1 1 130px;
-      max-width: 160px;
     }
-
-    button:hover:not(:disabled) {
-      background: #005a8f;
-    }
-
     button:disabled {
-      background: #a0a0a0;
+      opacity: 0.5;
       cursor: not-allowed;
-      box-shadow: none;
     }
-
+    .line-block {
+      border-left: 4px solid #0072b5;
+      padding-left: 1.2em;
+      margin-bottom: 1.5em;
+      white-space: pre-wrap;
+      background: #f7fbff;
+      border-radius: 6px;
+      box-shadow: 1px 1px 6px rgba(0,114,181,0.1);
+    }
     .progress-container {
       width: 100%;
       background-color: #e0e0e0;
-      border-radius: 12px;
-      height: 25px;
+      border-radius: 10px;
+      margin-bottom: 1.5em;
+      height: 22px;
       overflow: hidden;
-      box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.2);
-      margin-bottom: 1.5rem;
     }
-
     .progress-bar {
+      width: 0%;
       height: 100%;
       background-color: #0072b5;
-      width: 0;
+      border-radius: 10px 0 0 10px;
+      text-align: center;
       color: white;
       font-weight: 700;
-      text-align: center;
-      line-height: 25px;
-      transition: width 0.5s ease;
-      border-radius: 12px 0 0 12px;
+      line-height: 22px;
+      transition: width 0.4s ease;
       user-select: none;
     }
-
     #error {
-      color: #b00020;
+      color: #cc0000;
       font-weight: 600;
-      text-align: center;
-      min-height: 1.2rem;
+      margin-bottom: 1em;
+      min-height: 1.4em;
+    }
+    /* Estilos para el contenido formateado */
+    .line-block div {
+      margin-bottom: 0.5em;
+    }
+    .line-block .title {
+      font-weight: 700;
+      margin-bottom: 0.2em;
+    }
+    .hebrew-text {
+      font-weight: 700;
+      font-size: 2.5rem;
+      direction: rtl;
+      font-family: 'David Libre', serif, 'Times New Roman', serif;
       margin-bottom: 1rem;
-    }
-
-    #output {
-      background: #f9fbfd;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      max-height: 420px;
-      overflow-y: auto;
-      padding: 1rem 1.5rem;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      text-align: justify;
-      box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.05);
-    }
-
-    .line-block {
-      border-left: 4px solid #0072b5;
-      padding-left: 1rem;
-      margin-bottom: 1.5rem;
-      background-color: #eef6fb;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgb(0 114 181 / 0.1);
-    }
-
-    @media (max-width: 500px) {
-      #main {
-        padding: 1.2rem 1.5rem;
-      }
-      h1 {
-        font-size: 1.6rem;
-      }
-      button {
-        max-width: 100%;
-        flex: 1 1 auto;
-      }
-      .controls {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
+      user-select: text;
     }
   </style>
 </head>
 <body>
   <div id="main">
-    <h1>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
+    <header>
+      <!-- Dos logos clásicos de letras hebreas -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Hebrew_Letter_Alef.svg/120px-Hebrew_Letter_Alef.svg.png" alt="Letra Alef Hebrea" />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Hebrew_Letter_Bet.svg/120px-Hebrew_Letter_Bet.svg.png" alt="Letra Bet Hebrea" />
+      <h1>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
+    </header>
 
-    <div class="controls">
-      <label for="masechet">Masejet:</label>
-      <select id="masechet">
-        <option value="Bava Metzia">Bava Metzia</option>
-        <!-- Agrega más masejtot aquí -->
-      </select>
+    <label for="masechet">Masejet:</label>
+    <select id="masechet" aria-label="Selecciona masejet">
+      <option value="Bava Metzia">Bava Metzia</option>
+      <!-- Puedes agregar más masejtot si quieres -->
+    </select>
 
-      <label for="daf">Daf:</label>
-      <input type="number" id="daf" value="56" min="2" max="180" />
-    </div>
+    <label for="daf">Daf:</label>
+    <input type="number" id="daf" value="56" min="2" max="180" aria-label="Número de daf" />
 
-    <div class="controls">
-      <button id="startBtn">Comenzar</button>
-      <button id="nextBtn" disabled>Siguiente</button>
-      <button id="downloadBtn" disabled>Descargar PDF</button>
-    </div>
+    <button id="startBtn" aria-label="Comenzar estudio del daf">Comenzar</button>
+    <button id="nextBtn" disabled aria-label="Siguiente líneas">Siguiente</button>
+    <button id="downloadBtn" disabled aria-label="Descargar PDF">Descargar PDF</button>
 
-    <div class="progress-container" aria-label="Progreso de estudio">
+    <div class="progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
       <div class="progress-bar" id="progress-bar">0%</div>
     </div>
 
     <div id="error" role="alert" aria-live="assertive"></div>
-
-    <div id="output" aria-live="polite" aria-atomic="false"></div>
+    <div id="output" tabindex="0"></div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -227,6 +177,34 @@
       await nextLine();
     };
 
+    function formatContent(text) {
+      const hebreoMatch = text.match(/Hebreo:\s*([\s\S]*?)Transliteración:/);
+      const translitMatch = text.match(/Transliteración:\s*([\s\S]*?)Traducción:/);
+      const traduccionMatch = text.match(/Traducción:\s*([\s\S]*?)Explicación:/);
+      const explicacionMatch = text.match(/Explicación:\s*([\s\S]*)/);
+
+      const hebreo = hebreoMatch ? hebreoMatch[1].trim() : "";
+      const translit = translitMatch ? translitMatch[1].trim() : "";
+      const traduccion = traduccionMatch ? traduccionMatch[1].trim() : "";
+      const explicacion = explicacionMatch ? explicacionMatch[1].trim() : "";
+
+      return `
+        <div>
+          <div class="title">Hebreo:</div>
+          <div class="hebrew-text">${hebreo.replace(/\n/g,"<br>")}</div>
+
+          <div class="title">Transliteración:</div>
+          <div>${translit.replace(/\n/g,"<br>")}</div>
+
+          <div class="title">Traducción:</div>
+          <div>${traduccion.replace(/\n/g,"<br>")}</div>
+
+          <div class="title">Explicación:</div>
+          <div>${explicacion.replace(/\n/g,"<br>")}</div>
+        </div>
+      `;
+    }
+
     async function nextLine() {
       errorDiv.textContent = "";
 
@@ -240,7 +218,7 @@
 3) Traducción literal al español.  
 4) Explicación breve, clara y sencilla en español.
 
-Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como "Hebreo:", "Transliteración:", "Traducción:", "Explicación:". No agregues más texto.`
+Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como "Hebreo:", "Transliteración:", "Traducción:", "Explicación:". No agregues más texto.`  
         },
         {
           role: "user",
@@ -249,7 +227,7 @@ Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como 
 Hebreo:  
 Transliteración:  
 Traducción:  
-Explicación:`
+Explicación:`  
         }
       ];
 
@@ -280,7 +258,7 @@ Explicación:`
 
         const block = document.createElement("div");
         block.className = "line-block";
-        block.innerHTML = content.replace(/\n/g, "<br>");
+        block.innerHTML = formatContent(content);
         output.appendChild(block);
 
         updateProgress();
@@ -292,10 +270,11 @@ Explicación:`
     }
 
     function updateProgress() {
-      const totalLines = 50; 
+      const totalLines = 50;
       const percent = Math.min(100, Math.floor((currentLine / totalLines) * 100));
       progressBar.style.width = percent + "%";
       progressBar.textContent = percent + "%";
+      progressBar.setAttribute("aria-valuenow", percent);
     }
 
     downloadBtn.onclick = () => {
