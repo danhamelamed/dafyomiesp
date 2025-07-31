@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
   <style>
     body {
@@ -9,8 +9,12 @@
       margin: 2em;
       background: #fdfdfd;
     }
-    #main { max-width: 800px; margin: auto; }
-    select, button {
+    #main {
+      max-width: 800px;
+      margin: auto;
+    }
+    select,
+    button {
       padding: 0.5em;
       font-size: 1em;
       margin-right: 0.5em;
@@ -40,14 +44,16 @@
   <div id="main">
     <h1>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
 
-    <label>Masejet:
+    <label>
+      Masejet:
       <select id="masechet">
         <option value="Bava Metzia">Bava Metzia</option>
         <!-- puedes agregar más masejtot aquí -->
       </select>
     </label>
 
-    <label>Daf:
+    <label>
+      Daf:
       <input type="number" id="daf" value="56" min="2" max="180" />
     </label>
 
@@ -69,7 +75,7 @@
     let masechet = "";
     let daf = "";
 
-    const API_URL = "https://dafyomi-api.danfuenteslopez.workers.dev/"; // Cambia este URL
+    const API_URL = "https://dafyomi-api.danfuenteslopez.workers.dev/"; // Cambia este URL si es necesario
 
     async function startDaf() {
       currentLine = 0;
@@ -79,36 +85,43 @@
       document.getElementById("output").innerHTML = "";
       await nextLine();
     }
+
     async function nextLine() {
-  const msg = [
-    {
-      role: "system",
-      content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde el principio. Traduce al español y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`
-    },
-    {
-      role: "user",
-      content: `Por favor, continúa desde la línea ${currentLine + 1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`
-    }
-  ];
+      const msg = [
+        {
+          role: "system",
+          content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde el principio. Traduce al español y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`
+        },
+        {
+          role: "user",
+          content: `Por favor, continúa desde la línea ${currentLine + 1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`
+        }
+      ];
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ messages: msg })
-  });
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: msg })
+        });
 
-  const data = await res.json();
-  const answer = data.choices?.[0]?.message?.content || "Error al obtener respuesta";
+        if (!res.ok) throw new Error("Error en la respuesta del servidor");
 
-  allLines.push(answer);
-  currentLine += 2;
+        const data = await res.json();
+        const answer = data.choices?.[0]?.message?.content || "Error al obtener respuesta";
 
-  const block = document.createElement("div");
-  block.className = "line-block";
-  block.innerHTML = answer.replace(/\n/g, "<br>");
-  document.getElementById("output").appendChild(block);
+        allLines.push(answer);
+        currentLine += 2;
 
-  updateProgress();
+        const block = document.createElement("div");
+        block.className = "line-block";
+        block.innerHTML = answer.replace(/\n/g, "<br>");
+        document.getElementById("output").appendChild(block);
+
+        updateProgress();
+      } catch (error) {
+        alert("Error al obtener datos: " + error.message);
+      }
     }
 
     function updateProgress() {
@@ -119,12 +132,12 @@
     }
 
     async function downloadPDF() {
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF();
+      var jsPDF = window.jspdf.jsPDF;
+      var pdf = new jsPDF();
       let y = 10;
       allLines.forEach((text, i) => {
-        const lines = pdf.splitTextToSize(`${i * 2 + 1}-${i * 2 + 2}: ${text}`, 180);
-        lines.forEach(line => {
+        var lines = pdf.splitTextToSize(`${i * 2 + 1}-${i * 2 + 2}: ${text}`, 180);
+        lines.forEach((line) => {
           if (y > 280) {
             pdf.addPage();
             y = 10;
