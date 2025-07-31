@@ -79,37 +79,36 @@
       document.getElementById("output").innerHTML = "";
       await nextLine();
     }
-
     async function nextLine() {
-      const msg = [
-        {
-          role: "system",
-          content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde el principio. Traduce al español y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`
-        },
-        {
-          role: "user",
-          content: `Por favor, continúa desde la línea ${currentLine + 1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`
-        }
-      ];
+  const msg = [
+    {
+      role: "system",
+      content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde el principio. Traduce al español y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`
+    },
+    {
+      role: "user",
+      content: `Por favor, continúa desde la línea ${currentLine + 1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`
+    }
+  ];
 
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: msg })
-      });
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages: msg })
+  });
 
-      const data = await res.json();
-      const answer = data.choices?.[0]?.message?.content || "Error al obtener respuesta";
+  const data = await res.json();
+  const answer = data.choices?.[0]?.message?.content || "Error al obtener respuesta";
 
-      allLines.push(answer);
-      currentLine += 2;
+  allLines.push(answer);
+  currentLine += 2;
 
-      const  = document.createElement("div");
-      .className = "line-";
-      block.innerHTML = answer.replace(/\n/g, "<br>");
-      document.getElementById("output").appendChild(block);
+  const block = document.createElement("div");
+  block.className = "line-block";
+  block.innerHTML = answer.replace(/\n/g, "<br>");
+  document.getElementById("output").appendChild(block);
 
-      updateProgress();
+  updateProgress();
     }
 
     function updateProgress() {
