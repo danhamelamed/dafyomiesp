@@ -14,7 +14,8 @@
       margin: auto;
     }
     select,
-    button {
+    button,
+    input {
       padding: 0.5em;
       font-size: 1em;
       margin-right: 0.5em;
@@ -23,6 +24,7 @@
       border-left: 4px solid #0072b5;
       padding-left: 1em;
       margin-bottom: 1em;
+      white-space: pre-wrap;
     }
     .progress-container {
       width: 100%;
@@ -37,6 +39,11 @@
       border-radius: 10px;
       text-align: center;
       color: white;
+      transition: width 0.3s ease;
+    }
+    #error {
+      color: red;
+      margin-bottom: 1em;
     }
   </style>
 </head>
@@ -44,27 +51,24 @@
   <div id="main">
     <h1>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
 
-    <label>
-      Masejet:
-      <select id="masechet">
-        <option value="Bava Metzia">Bava Metzia</option>
-        <!-- puedes agregar más masejtot aquí -->
-      </select>
-    </label>
+    <label for="masechet">Masejet:</label>
+    <select id="masechet">
+      <option value="Bava Metzia">Bava Metzia</option>
+      <!-- Agrega más masejtot si quieres -->
+    </select>
 
-    <label>
-      Daf:
-      <input type="number" id="daf" value="56" min="2" max="180" />
-    </label>
+    <label for="daf">Daf:</label>
+    <input type="number" id="daf" value="56" min="2" max="180" />
 
-    <button onclick="startDaf()">Comenzar</button>
-    <button onclick="nextLine()">Siguiente</button>
-    <button onclick="downloadPDF()">Descargar PDF</button>
+    <button id="startBtn">Comenzar</button>
+    <button id="nextBtn" disabled>Siguiente</button>
+    <button id="downloadBtn" disabled>Descargar PDF</button>
 
     <div class="progress-container">
       <div class="progress-bar" id="progress-bar">0%</div>
     </div>
 
+    <div id="error"></div>
     <div id="output"></div>
   </div>
 
@@ -74,69 +78,99 @@
     let allLines = [];
     let masechet = "";
     let daf = "";
+    const API_URL = "https://dafyomi-api.danfuenteslopez.workers.dev/";
 
-    const API_URL = "https://dafyomi-api.danfuenteslopez.workers.dev/"; // Cambia este URL si es necesario
+    const startBtn = document.getElementById("startBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const output = document.getElementById("output");
+    const progressBar = document.getElementById("progress-bar");
+    const errorDiv = document.getElementById("error");
 
-    async function startDaf() {
+    startBtn.onclick = async () => {
+      errorDiv.textContent = "";
+      output.innerHTML = "";
       currentLine = 0;
       allLines = [];
       masechet = document.getElementById("masechet").value;
       daf = document.getElementById("daf").value;
-      document.getElementById("output").innerHTML = "";
+
+      nextBtn.disabled = false;
+      downloadBtn.disabled = true;
+
       await nextLine();
-    }
+    };
+
+    nextBtn.onclick = async () => {
+      await nextLine();
+    };
 
     async function nextLine() {
-      const msg = [
+      errorDiv.textContent = "";
+
+      const messages = [
         {
           role: "system",
-          content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde el principio. Traduce al español y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`
+          content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde la línea ${currentLine +
+            1}. Traduce y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`,
         },
         {
           role: "user",
-          content: `Por favor, continúa desde la línea ${currentLine + 1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`
-        }
+          content: `Por favor, continúa desde la línea ${currentLine +
+            1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`,
+        },
       ];
 
       try {
         const res = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: msg })
+          body: JSON.stringify({ messages }),
         });
 
-        if (!res.ok) throw new Error("Error en la respuesta del servidor");
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`Error del servidor: ${errText}`);
+        }
 
         const data = await res.json();
-        const answer = data.choices?.[0]?.message?.content || "Error al obtener respuesta";
 
-        allLines.push(answer);
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+          throw new Error("Respuesta inesperada del servidor.");
+        }
+
+        const text = data.choices[0].message.content;
+        allLines.push(text);
         currentLine += 2;
 
         const block = document.createElement("div");
         block.className = "line-block";
-        block.innerHTML = answer.replace(/\n/g, "<br>");
-        document.getElementById("output").appendChild(block);
+        block.textContent = text;
+        output.appendChild(block);
 
         updateProgress();
-      } catch (error) {
-        alert("Error al obtener datos: " + error.message);
+
+        downloadBtn.disabled = false;
+      } catch (e) {
+        errorDiv.textContent = e.message;
       }
     }
 
     function updateProgress() {
-      const percent = Math.min(100, Math.floor((currentLine / 50) * 100));
-      const bar = document.getElementById("progress-bar");
-      bar.style.width = percent + "%";
-      bar.textContent = percent + "%";
+      // Para simplicidad, asumo daf tiene 50 líneas — puedes ajustar luego
+      const totalLines = 50;
+      const percent = Math.min(100, Math.floor((currentLine / totalLines) * 100));
+      progressBar.style.width = percent + "%";
+      progressBar.textContent = percent + "%";
     }
 
-    async function downloadPDF() {
-      var jsPDF = window.jspdf.jsPDF;
-      var pdf = new jsPDF();
+    downloadBtn.onclick = () => {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
       let y = 10;
+
       allLines.forEach((text, i) => {
-        var lines = pdf.splitTextToSize(`${i * 2 + 1}-${i * 2 + 2}: ${text}`, 180);
+        const lines = pdf.splitTextToSize(`${i * 2 + 1}-${i * 2 + 2}: ${text}`, 180);
         lines.forEach((line) => {
           if (y > 280) {
             pdf.addPage();
@@ -146,8 +180,9 @@
           y += 7;
         });
       });
+
       pdf.save(`Daf_${masechet}_${daf}.pdf`);
-    }
+    };
   </script>
 </body>
 </html>
