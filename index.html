@@ -2,300 +2,160 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
-
-  <!-- Fuente hebrea David Libre de Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=David+Libre&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Alef&display=swap" rel="stylesheet">
   <style>
     body {
+      margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 2em;
-      background: #fdfdfd;
-      color: #222;
+      background-color: #f9f9f9;
+      display: flex;
+      min-height: 100vh;
     }
-    #main {
-      max-width: 850px;
-      margin: auto;
-      padding: 1em 2em;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
-      background: white;
+    .sidebar {
+      width: 250px;
+      background-color: #2e2e2e;
+      color: white;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     }
-    header {
-      text-align: center;
-      margin-bottom: 1.5em;
+    .sidebar h2 {
+      font-size: 1.3rem;
+      border-bottom: 1px solid #666;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
     }
-    header img {
-      height: 80px;
-      margin: 0 15px;
-      vertical-align: middle;
+    .sidebar ul {
+      list-style: square;
+      padding-left: 20px;
+    }
+    .sidebar li {
+      margin-bottom: 10px;
+    }
+    .main {
+      flex: 1;
+      padding: 20px;
     }
     h1 {
-      font-weight: 700;
-      margin-top: 0.3em;
-      font-size: 1.8rem;
-      letter-spacing: 0.05em;
-      color: #0072b5;
-    }
-    label {
-      display: inline-block;
-      margin: 0.6em 1em 1em 0;
-      font-weight: 600;
-      font-size: 1rem;
-    }
-    select, input[type=number], button {
-      padding: 0.5em 1em;
-      font-size: 1rem;
-      margin-right: 0.5em;
-      border: 1px solid #bbb;
-      border-radius: 5px;
-      transition: border-color 0.3s;
-    }
-    select:hover, input[type=number]:hover, button:hover {
-      border-color: #0072b5;
-      cursor: pointer;
-    }
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .line-block {
-      border-left: 4px solid #0072b5;
-      padding-left: 1.2em;
-      margin-bottom: 1.5em;
-      white-space: pre-wrap;
-      background: #f7fbff;
-      border-radius: 6px;
-      box-shadow: 1px 1px 6px rgba(0,114,181,0.1);
-    }
-    .progress-container {
-      width: 100%;
-      background-color: #e0e0e0;
-      border-radius: 10px;
-      margin-bottom: 1.5em;
-      height: 22px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      width: 0%;
-      height: 100%;
-      background-color: #0072b5;
-      border-radius: 10px 0 0 10px;
       text-align: center;
-      color: white;
-      font-weight: 700;
-      line-height: 22px;
-      transition: width 0.4s ease;
-      user-select: none;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
     }
-    #error {
-      color: #cc0000;
-      font-weight: 600;
-      margin-bottom: 1em;
-      min-height: 1.4em;
+    select, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 1rem;
     }
-    /* Estilos para el contenido formateado */
-    .line-block div {
-      margin-bottom: 0.5em;
+    .output {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .line-block .title {
-      font-weight: 700;
-      margin-bottom: 0.2em;
-    }
-    .hebrew-text {
-      font-weight: 700;
-      font-size: 2.5rem;
+    .hebrew {
+      font-family: 'Alef', serif;
+      font-size: 2rem;
+      font-weight: bold;
       direction: rtl;
-      font-family: 'David Libre', serif, 'Times New Roman', serif;
-      margin-bottom: 1rem;
-      user-select: text;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .label {
+      font-weight: bold;
+      margin-top: 15px;
+      color: #444;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
     }
   </style>
 </head>
 <body>
-  <div id="main">
-    <header>
-      <!-- Dos logos clásicos de letras hebreas -->
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Hebrew_Letter_Alef.svg/120px-Hebrew_Letter_Alef.svg.png" alt="Letra Alef Hebrea" />
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Hebrew_Letter_Bet.svg/120px-Hebrew_Letter_Bet.svg.png" alt="Letra Bet Hebrea" />
-      <h1>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
-    </header>
-
-    <label for="masechet">Masejet:</label>
-    <select id="masechet" aria-label="Selecciona masejet">
-      <option value="Bava Metzia">Bava Metzia</option>
-      <!-- Puedes agregar más masejtot si quieres -->
-    </select>
-
-    <label for="daf">Daf:</label>
-    <input type="number" id="daf" value="56" min="2" max="180" aria-label="Número de daf" />
-
-    <button id="startBtn" aria-label="Comenzar estudio del daf">Comenzar</button>
-    <button id="nextBtn" disabled aria-label="Siguiente líneas">Siguiente</button>
-    <button id="downloadBtn" disabled aria-label="Descargar PDF">Descargar PDF</button>
-
-    <div class="progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-      <div class="progress-bar" id="progress-bar">0%</div>
+  <div class="sidebar">
+    <h2>Órdenes del Talmud</h2>
+    <ul>
+      <li>Zeraim</li>
+      <li>Moed</li>
+      <li>Nashim</li>
+      <li>Nezikin</li>
+      <li>Kodashim</li>
+      <li>Tahorot</li>
+    </ul>
+  </div>
+  <div class="main">
+    <h1>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
+    <div>
+      <label for="masechet">Masechet:</label>
+      <select id="masechet">
+        <option value="Bava Metzia">Bava Metzia</option>
+        <!-- Añadir más masechtot si se desea -->
+      </select>
+      <label for="daf">Daf:</label>
+      <input type="number" id="daf" value="56" min="2" />
+      <button onclick="startDaf()">Comenzar</button>
+      <button onclick="nextLine()">Siguiente 2 líneas</button>
     </div>
-
-    <div id="error" role="alert" aria-live="assertive"></div>
-    <div id="output" tabindex="0"></div>
+    <div id="output" class="output"></div>
+    <div class="footer">Hecho con ❤️ para la difusión del estudio del Talmud</div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     let currentLine = 0;
-    let allLines = [];
-    let masechet = "";
-    let daf = "";
-    const API_URL = "https://dafyomi-api.danfuenteslopez.workers.dev/";
 
-    const startBtn = document.getElementById("startBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const output = document.getElementById("output");
-    const progressBar = document.getElementById("progress-bar");
-    const errorDiv = document.getElementById("error");
-
-    startBtn.onclick = async () => {
-      errorDiv.textContent = "";
-      output.innerHTML = "";
+    async function startDaf() {
       currentLine = 0;
-      allLines = [];
-      masechet = document.getElementById("masechet").value;
-      daf = document.getElementById("daf").value;
-
-      nextBtn.disabled = false;
-      downloadBtn.disabled = true;
-
+      document.getElementById('output').innerHTML = '';
       await nextLine();
-    };
-
-    nextBtn.onclick = async () => {
-      await nextLine();
-    };
-
-    function formatContent(text) {
-      const hebreoMatch = text.match(/Hebreo:\s*([\s\S]*?)Transliteración:/);
-      const translitMatch = text.match(/Transliteración:\s*([\s\S]*?)Traducción:/);
-      const traduccionMatch = text.match(/Traducción:\s*([\s\S]*?)Explicación:/);
-      const explicacionMatch = text.match(/Explicación:\s*([\s\S]*)/);
-
-      const hebreo = hebreoMatch ? hebreoMatch[1].trim() : "";
-      const translit = translitMatch ? translitMatch[1].trim() : "";
-      const traduccion = traduccionMatch ? traduccionMatch[1].trim() : "";
-      const explicacion = explicacionMatch ? explicacionMatch[1].trim() : "";
-
-      return `
-        <div>
-          <div class="title">Hebreo:</div>
-          <div class="hebrew-text">${hebreo.replace(/\n/g,"<br>")}</div>
-
-          <div class="title">Transliteración:</div>
-          <div>${translit.replace(/\n/g,"<br>")}</div>
-
-          <div class="title">Traducción:</div>
-          <div>${traduccion.replace(/\n/g,"<br>")}</div>
-
-          <div class="title">Explicación:</div>
-          <div>${explicacion.replace(/\n/g,"<br>")}</div>
-        </div>
-      `;
     }
 
     async function nextLine() {
-      errorDiv.textContent = "";
+      const masechet = document.getElementById("masechet").value;
+      const daf = document.getElementById("daf").value;
 
       const messages = [
         {
           role: "system",
-          content: `Eres un traductor y comentarista experto en Guemará. Para cada segmento que te pida, devuelve en este orden, claramente separados:
-
-1) Texto original en hebreo (solo hebreo, sin transliteración ni traducción).  
-2) Transliteración fonética del hebreo.  
-3) Traducción literal al español.  
-4) Explicación breve, clara y sencilla en español.
-
-Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como "Hebreo:", "Transliteración:", "Traducción:", "Explicación:". No agregues más texto.`  
+          content: `Eres un maestro de Talmud que enseña paso a paso. Usa el texto hebreo ORIGINAL del Daf {masechet} {daf}a/b. Presenta solo dos líneas a la vez, luego detente. Da lo siguiente:
+          1. Texto original en hebreo (grande y en negrita).
+          2. Transliteración fonética.
+          3. Traducción textual al español.
+          4. Breve explicación sencilla.
+          SOLO del Daf y líneas que se pidieron. No inventes.`
         },
         {
           role: "user",
-          content: `Por favor, para las líneas ${currentLine + 1} y ${currentLine + 2} del Daf ${masechet} ${daf}, devuelve:
-
-Hebreo:  
-Transliteración:  
-Traducción:  
-Explicación:`  
+          content: `Estoy estudiando ${masechet} ${daf}. Empieza en la línea ${currentLine + 1}. Por favor dame exactamente dos líneas.`
         }
       ];
 
       try {
-        const res = await fetch(API_URL, {
+        const response = await fetch("https://dafyomi-api.danfuenteslopez.workers.dev/", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages }),
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ messages })
         });
 
-        const text = await res.text();
-
-        if (!res.ok) {
-          errorDiv.textContent = `Error del servidor (${res.status}): ${text}`;
-          throw new Error(text);
-        }
-
-        const data = JSON.parse(text);
-
-        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-          errorDiv.textContent = "Respuesta inesperada del servidor: " + JSON.stringify(data);
-          throw new Error("Respuesta inesperada");
-        }
+        const data = await response.json();
+        if (!data.choices || !data.choices[0]) throw new Error("Sin respuesta válida");
 
         const content = data.choices[0].message.content;
-        allLines.push(content);
+        const outputDiv = document.getElementById("output");
+        const newDiv = document.createElement("div");
+        newDiv.innerHTML = content.replaceAll('\n', '<br>');
+        outputDiv.appendChild(newDiv);
+
         currentLine += 2;
-
-        const block = document.createElement("div");
-        block.className = "line-block";
-        block.innerHTML = formatContent(content);
-        output.appendChild(block);
-
-        updateProgress();
-
-        downloadBtn.disabled = false;
-      } catch (e) {
-        console.error("Error en nextLine:", e);
+      } catch (error) {
+        alert("Error al obtener respuesta del servidor.");
+        console.error("Error:", error);
       }
     }
-
-    function updateProgress() {
-      const totalLines = 50;
-      const percent = Math.min(100, Math.floor((currentLine / totalLines) * 100));
-      progressBar.style.width = percent + "%";
-      progressBar.textContent = percent + "%";
-      progressBar.setAttribute("aria-valuenow", percent);
-    }
-
-    downloadBtn.onclick = () => {
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF();
-      let y = 10;
-
-      allLines.forEach((text, i) => {
-        const lines = pdf.splitTextToSize(`${i * 2 + 1}-${i * 2 + 2}:\n${text}`, 180);
-        lines.forEach((line) => {
-          if (y > 280) {
-            pdf.addPage();
-            y = 10;
-          }
-          pdf.text(line, 10, y);
-          y += 7;
-        });
-      });
-
-      pdf.save(`Daf_${masechet}_${daf}.pdf`);
-    };
   </script>
 </body>
 </html>
