@@ -4,47 +4,7 @@
   <meta charset="UTF-8" />
   <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 2em;
-      background: #fdfdfd;
-    }
-    #main {
-      max-width: 800px;
-      margin: auto;
-    }
-    select,
-    button,
-    input {
-      padding: 0.5em;
-      font-size: 1em;
-      margin-right: 0.5em;
-    }
-    .line-block {
-      border-left: 4px solid #0072b5;
-      padding-left: 1em;
-      margin-bottom: 1em;
-      white-space: pre-wrap;
-    }
-    .progress-container {
-      width: 100%;
-      background-color: #e0e0e0;
-      border-radius: 10px;
-      margin-bottom: 1em;
-    }
-    .progress-bar {
-      width: 0%;
-      height: 20px;
-      background-color: #4caf50;
-      border-radius: 10px;
-      text-align: center;
-      color: white;
-      transition: width 0.3s ease;
-    }
-    #error {
-      color: red;
-      margin-bottom: 1em;
-    }
+    /* tus estilos */
   </style>
 </head>
 <body>
@@ -54,7 +14,6 @@
     <label for="masechet">Masejet:</label>
     <select id="masechet">
       <option value="Bava Metzia">Bava Metzia</option>
-      <!-- Agrega más masejtot si quieres -->
     </select>
 
     <label for="daf">Daf:</label>
@@ -68,7 +27,7 @@
       <div class="progress-bar" id="progress-bar">0%</div>
     </div>
 
-    <div id="error"></div>
+    <div id="error" style="color: red; margin-bottom: 1em;"></div>
     <div id="output"></div>
   </div>
 
@@ -105,13 +64,13 @@
       await nextLine();
     };
 
-  async function nextLine() {
-  errorDiv.textContent = "";
+    async function nextLine() {
+      errorDiv.textContent = "";
 
-  const messages = [
-    {
-      role: "system",
-      content: `Eres un traductor y comentarista experto en Guemará. Para cada segmento que te pida, devuelve en este orden, claramente separados:
+      const messages = [
+        {
+          role: "system",
+          content: `Eres un traductor y comentarista experto en Guemará. Para cada segmento que te pida, devuelve en este orden, claramente separados:
 
 1) Texto original en hebreo (solo hebreo, sin transliteración ni traducción).  
 2) Transliteración fonética del hebreo.  
@@ -119,58 +78,58 @@
 4) Explicación breve, clara y sencilla en español.
 
 Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como "Hebreo:", "Transliteración:", "Traducción:", "Explicación:". No agregues más texto.`  
-    },
-    {
-      role: "user",
-      content: `Por favor, para las líneas ${currentLine + 1} y ${currentLine + 2} del Daf ${masechet} ${daf}, devuelve:
+        },
+        {
+          role: "user",
+          content: `Por favor, para las líneas ${currentLine + 1} y ${currentLine + 2} del Daf ${masechet} ${daf}, devuelve:
 
 Hebreo:  
 Transliteración:  
 Traducción:  
 Explicación:`  
+        }
+      ];
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages }),
+        });
+
+        const text = await res.text();
+        console.log("Respuesta raw del API:", text);
+
+        if (!res.ok) {
+          errorDiv.textContent = `Error del servidor (${res.status}): ${text}`;
+          throw new Error(text);
+        }
+
+        const data = JSON.parse(text);
+
+        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+          errorDiv.textContent = "Respuesta inesperada del servidor: " + JSON.stringify(data);
+          throw new Error("Respuesta inesperada");
+        }
+
+        const content = data.choices[0].message.content;
+        allLines.push(content);
+        currentLine += 2;
+
+        const block = document.createElement("div");
+        block.className = "line-block";
+        block.innerHTML = content.replace(/\n/g, "<br>");
+        output.appendChild(block);
+
+        updateProgress();
+
+        downloadBtn.disabled = false;
+      } catch (e) {
+        console.error("Error en nextLine:", e);
+      }
     }
-  ];
-
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages }),
-    });
-
-    const text = await res.text();
-
-    if (!res.ok) {
-      errorDiv.textContent = `Error del servidor (${res.status}): ${text}`;
-      throw new Error(text);
-    }
-
-    const data = JSON.parse(text);
-
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      errorDiv.textContent = "Respuesta inesperada del servidor: " + JSON.stringify(data);
-      throw new Error("Respuesta inesperada");
-    }
-
-    const content = data.choices[0].message.content;
-    allLines.push(content);
-    currentLine += 2;
-
-    const block = document.createElement("div");
-    block.className = "line-block";
-    block.innerHTML = content.replace(/\n/g, "<br>");
-    output.appendChild(block);
-
-    updateProgress();
-
-    downloadBtn.disabled = false;
-  } catch (e) {
-    console.error("Error en nextLine:", e);
-  }
-}
 
     function updateProgress() {
-      // Para simplicidad, asumo daf tiene 50 líneas — puedes ajustar luego
       const totalLines = 50;
       const percent = Math.min(100, Math.floor((currentLine / totalLines) * 100));
       progressBar.style.width = percent + "%";
