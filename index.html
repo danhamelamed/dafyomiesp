@@ -108,15 +108,22 @@
    async function nextLine() {
   errorDiv.textContent = "";
 
+  async function nextLine() {
+  errorDiv.textContent = "";
+
   const messages = [
     {
       role: "system",
-      content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde la línea ${currentLine + 1}. Traduce y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`,
+      content: `Eres un traductor y comentarista experto en Guemará. Debes entregar siempre el texto original en hebreo, seguido de su traducción al español, y una breve explicación clara y sencilla. No uses transliteración ni explicaciones largas.`
     },
     {
       role: "user",
-      content: `Por favor, continúa desde la línea ${currentLine + 1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`,
-    },
+      content: `Por favor, para las líneas ${currentLine + 1} y ${currentLine + 2} del Daf ${masechet} ${daf}, devuelve:
+
+1) Texto original en hebreo.  
+2) Traducción literal al español.  
+3) Breve explicación en español.`
+    }
   ];
 
   try {
@@ -146,7 +153,7 @@
 
     const block = document.createElement("div");
     block.className = "line-block";
-    block.textContent = content;
+    block.innerHTML = content.replace(/\n/g, "<br>");
     output.appendChild(block);
 
     updateProgress();
