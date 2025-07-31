@@ -105,24 +105,29 @@
       await nextLine();
     };
 
-   async function nextLine() {
-  errorDiv.textContent = "";
-
   async function nextLine() {
   errorDiv.textContent = "";
 
   const messages = [
     {
       role: "system",
-      content: `Eres un traductor y comentarista experto en Guemará. Debes entregar siempre el texto original en hebreo, seguido de su traducción al español, y una breve explicación clara y sencilla. No uses transliteración ni explicaciones largas.`
+      content: `Eres un traductor y comentarista experto en Guemará. Para cada segmento que te pida, devuelve en este orden, claramente separados:
+
+1) Texto original en hebreo (solo hebreo, sin transliteración ni traducción).  
+2) Transliteración fonética del hebreo.  
+3) Traducción literal al español.  
+4) Explicación breve, clara y sencilla en español.
+
+Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como "Hebreo:", "Transliteración:", "Traducción:", "Explicación:". No agregues más texto.`  
     },
     {
       role: "user",
       content: `Por favor, para las líneas ${currentLine + 1} y ${currentLine + 2} del Daf ${masechet} ${daf}, devuelve:
 
-1) Texto original en hebreo.  
-2) Traducción literal al español.  
-3) Breve explicación en español.`
+Hebreo:  
+Transliteración:  
+Traducción:  
+Explicación:`  
     }
   ];
 
@@ -163,7 +168,6 @@
     console.error("Error en nextLine:", e);
   }
 }
-
 
     function updateProgress() {
       // Para simplicidad, asumo daf tiene 50 líneas — puedes ajustar luego
