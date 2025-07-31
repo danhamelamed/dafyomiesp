@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2em;
+      background: #fdfdfd;
+    }
+    #main { max-width: 800px; margin: auto; }
+    select, button {
+      padding: 0.5em;
+      font-size: 1em;
+      margin-right: 0.5em;
+    }
+    .line-block {
+      border-left: 4px solid #0072b5;
+      padding-left: 1em;
+      margin-bottom: 1em;
+    }
+    .progress-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      margin-bottom: 1em;
+    }
+    .progress-bar {
+      width: 0%;
+      height: 20px;
+      background-color: #4caf50;
+      border-radius: 10px;
+      text-align: center;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <h1>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
+
+    <label>Masejet:
+      <select id="masechet">
+        <option value="Bava Metzia">Bava Metzia</option>
+        <!-- puedes agregar más masejtot aquí -->
+      </select>
+    </label>
+
+    <label>Daf:
+      <input type="number" id="daf" value="56" min="2" max="180" />
+    </label>
+
+    <button onclick="startDaf()">Comenzar</button>
+    <button onclick="nextLine()">Siguiente</button>
+    <button onclick="downloadPDF()">Descargar PDF</button>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar">0%</div>
+    </div>
+
+    <div id="output"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    let currentLine = 0;
+    let allLines = [];
+    let masechet = "";
+    let daf = "";
+
+    const API_URL = "https://dafyomi-api.danfuenteslopez.workers.dev/"; // Cambia este URL
+
+    async function startDaf() {
+      currentLine = 0;
+      allLines = [];
+      masechet = document.getElementById("masechet").value;
+      daf = document.getElementById("daf").value;
+      document.getElementById("output").innerHTML = "";
+      await nextLine();
+    }
+
+    async function nextLine() {
+      const msg = [
+        {
+          role: "system",
+          content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde el principio. Traduce al español y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`
+        },
+        {
+          role: "user",
+          content: `Por favor, continúa desde la línea ${currentLine + 1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`
+        }
+      ];
+
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: msg })
+      });
+
+      const data = await res.json();
+      const answer = data.choices?.[0]?.message?.content || "Error al obtener respuesta";
+
+      allLines.push(answer);
+      currentLine += 2;
+
+      const block = document.createElement("div");
+      block.className = "line-block";
+      block.textContent = answer;
+      document.getElementById("output").appendChild(block);
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const percent = Math.min(100, Math.floor((currentLine / 50) * 100));
+      const bar = document.getElementById("progress-bar");
+      bar.style.width = percent + "%";
+      bar.textContent = percent + "%";
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      let y = 10;
+      allLines.forEach((text, i) => {
+        const lines = pdf.splitTextToSize(`${i * 2 + 1}-${i * 2 + 2}: ${text}`, 180);
+        lines.forEach(line => {
+          if (y > 280) {
+            pdf.addPage();
+            y = 10;
+          }
+          pdf.text(line, 10, y);
+          y += 7;
+        });
+      });
+      pdf.save(`Daf_${masechet}_${daf}.pdf`);
+    }
+  </script>
+</body>
+</html>
