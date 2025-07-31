@@ -105,56 +105,58 @@
       await nextLine();
     };
 
-    async function nextLine() {
-      errorDiv.textContent = "";
+   async function nextLine() {
+  errorDiv.textContent = "";
 
-      const messages = [
-        {
-          role: "system",
-          content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde la línea ${currentLine +
-            1}. Traduce y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`,
-        },
-        {
-          role: "user",
-          content: `Por favor, continúa desde la línea ${currentLine +
-            1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`,
-        },
-      ];
+  const messages = [
+    {
+      role: "system",
+      content: `Actúa como traductor y comentarista de Guemará. Estás explicando el Daf Yomi de ${masechet} ${daf}, empezando desde la línea ${currentLine + 1}. Traduce y explica cada dos líneas de forma clara, natural y conversacional. Solo incluye Rashi si da una explicación clave o profunda.`,
+    },
+    {
+      role: "user",
+      content: `Por favor, continúa desde la línea ${currentLine + 1} del Daf ${daf}. Devuelve las próximas dos líneas con traducción y explicación en español.`,
+    },
+  ];
 
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages }),
-        });
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages }),
+    });
 
-        if (!res.ok) {
-          const errText = await res.text();
-          throw new Error(`Error del servidor: ${errText}`);
-        }
+    const text = await res.text();
 
-        const data = await res.json();
-
-        if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-          throw new Error("Respuesta inesperada del servidor.");
-        }
-
-        const text = data.choices[0].message.content;
-        allLines.push(text);
-        currentLine += 2;
-
-        const block = document.createElement("div");
-        block.className = "line-block";
-        block.textContent = text;
-        output.appendChild(block);
-
-        updateProgress();
-
-        downloadBtn.disabled = false;
-      } catch (e) {
-        errorDiv.textContent = e.message;
-      }
+    if (!res.ok) {
+      errorDiv.textContent = `Error del servidor (${res.status}): ${text}`;
+      throw new Error(text);
     }
+
+    const data = JSON.parse(text);
+
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      errorDiv.textContent = "Respuesta inesperada del servidor: " + JSON.stringify(data);
+      throw new Error("Respuesta inesperada");
+    }
+
+    const content = data.choices[0].message.content;
+    allLines.push(content);
+    currentLine += 2;
+
+    const block = document.createElement("div");
+    block.className = "line-block";
+    block.textContent = content;
+    output.appendChild(block);
+
+    updateProgress();
+
+    downloadBtn.disabled = false;
+  } catch (e) {
+    console.error("Error en nextLine:", e);
+  }
+}
+
 
     function updateProgress() {
       // Para simplicidad, asumo daf tiene 50 líneas — puedes ajustar luego
