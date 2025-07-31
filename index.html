@@ -3,124 +3,163 @@
 <head>
   <meta charset="UTF-8" />
   <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
-
-  <!-- Fuentes recomendadas para hebreo y texto general -->
-  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Rubik&display=swap" rel="stylesheet" />
-
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #fafafa;
+      font-family: 'Montserrat', sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
       color: #333;
-      margin: 2em auto;
-      max-width: 900px;
-      line-height: 1.6;
-      padding: 0 1em;
     }
+
+    #main {
+      max-width: 800px;
+      width: 95%;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgb(0 0 0 / 0.1);
+      padding: 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
     h1 {
       text-align: center;
-      color: #004080;
-      margin-bottom: 1em;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: #0072b5;
+      margin-bottom: 1rem;
     }
+
     label {
       font-weight: 600;
-      margin-right: 0.5em;
+      font-size: 1.1rem;
+      margin-right: 0.75rem;
     }
-    select,
-    input {
+
+    select, input[type=number] {
+      font-size: 1.1rem;
+      padding: 0.4rem 0.7rem;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 0.4em 0.8em;
-      font-size: 1em;
-      margin-right: 0.8em;
       transition: border-color 0.3s ease;
     }
-    select:focus,
-    input:focus {
+
+    select:focus, input[type=number]:focus {
       border-color: #0072b5;
       outline: none;
     }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
     button {
-      background-color: #0072b5;
-      border: none;
+      background: #0072b5;
       color: white;
-      padding: 0.6em 1.2em;
-      margin-right: 0.5em;
-      border-radius: 5px;
-      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 1.5rem;
+      font-size: 1.1rem;
       font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgb(0 114 181 / 0.3);
       transition: background-color 0.3s ease;
+      user-select: none;
+      flex: 1 1 130px;
+      max-width: 160px;
     }
-    button:disabled {
-      background-color: #a0a0a0;
-      cursor: not-allowed;
-    }
+
     button:hover:not(:disabled) {
-      background-color: #005a8a;
+      background: #005a8f;
     }
-    .line-block {
-      background-color: #f7faff;
-      border-left: 5px solid #0072b5;
-      padding: 1em 1.2em;
-      margin-bottom: 1.2em;
-      border-radius: 5px;
-      white-space: pre-wrap;
-      box-shadow: 0 1px 5px rgb(0 114 181 / 0.15);
-      font-size: 1.05em;
+
+    button:disabled {
+      background: #a0a0a0;
+      cursor: not-allowed;
+      box-shadow: none;
     }
-    .hebrew-text {
-      font-family: 'Rubik', 'Varela Round', Arial, sans-serif;
-      font-size: 1.3em;
-      direction: rtl;
-      unicode-bidi: isolate;
-      margin-bottom: 0.5em;
-      color: #002855;
-    }
+
     .progress-container {
-      background-color: #d1e4fb;
-      border-radius: 20px;
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 12px;
       height: 25px;
-      margin-bottom: 1.5em;
-      box-shadow: inset 0 2px 5px rgb(0 0 0 / 0.1);
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.2);
+      margin-bottom: 1.5rem;
     }
+
     .progress-bar {
-      background-color: #0072b5;
       height: 100%;
-      width: 0%;
-      border-radius: 20px;
-      text-align: center;
+      background-color: #0072b5;
+      width: 0;
       color: white;
       font-weight: 700;
-      transition: width 0.4s ease;
+      text-align: center;
       line-height: 25px;
-      font-size: 1em;
+      transition: width 0.5s ease;
+      border-radius: 12px 0 0 12px;
+      user-select: none;
     }
+
     #error {
       color: #b00020;
       font-weight: 600;
-      margin-bottom: 1em;
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-      font-size: 1.1em;
+      text-align: center;
+      min-height: 1.2rem;
+      margin-bottom: 1rem;
     }
-    @media (max-width: 600px) {
-      body {
-        margin: 1em;
-        padding: 0 0.5em;
-      }
-      button,
-      input,
-      select {
-        width: 100%;
-        margin: 0.5em 0;
-      }
-      label {
-        display: block;
-        margin-bottom: 0.3em;
-      }
+
+    #output {
+      background: #f9fbfd;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      text-align: justify;
+      box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.05);
+    }
+
+    .line-block {
+      border-left: 4px solid #0072b5;
+      padding-left: 1rem;
+      margin-bottom: 1.5rem;
+      background-color: #eef6fb;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgb(0 114 181 / 0.1);
+    }
+
+    @media (max-width: 500px) {
       #main {
+        padding: 1.2rem 1.5rem;
+      }
+      h1 {
+        font-size: 1.6rem;
+      }
+      button {
         max-width: 100%;
+        flex: 1 1 auto;
+      }
+      .controls {
+        flex-direction: column;
+        gap: 0.75rem;
       }
     }
   </style>
@@ -129,25 +168,30 @@
   <div id="main">
     <h1>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
 
-    <label for="masechet">Masejet:</label>
-    <select id="masechet">
-      <option value="Bava Metzia">Bava Metzia</option>
-      <!-- Agrega más masejtot aquí -->
-    </select>
+    <div class="controls">
+      <label for="masechet">Masejet:</label>
+      <select id="masechet">
+        <option value="Bava Metzia">Bava Metzia</option>
+        <!-- Agrega más masejtot aquí -->
+      </select>
 
-    <label for="daf">Daf:</label>
-    <input type="number" id="daf" value="56" min="2" max="180" />
+      <label for="daf">Daf:</label>
+      <input type="number" id="daf" value="56" min="2" max="180" />
+    </div>
 
-    <button id="startBtn">Comenzar</button>
-    <button id="nextBtn" disabled>Siguiente</button>
-    <button id="downloadBtn" disabled>Descargar PDF</button>
+    <div class="controls">
+      <button id="startBtn">Comenzar</button>
+      <button id="nextBtn" disabled>Siguiente</button>
+      <button id="downloadBtn" disabled>Descargar PDF</button>
+    </div>
 
-    <div class="progress-container">
+    <div class="progress-container" aria-label="Progreso de estudio">
       <div class="progress-bar" id="progress-bar">0%</div>
     </div>
 
-    <div id="error"></div>
-    <div id="output"></div>
+    <div id="error" role="alert" aria-live="assertive"></div>
+
+    <div id="output" aria-live="polite" aria-atomic="false"></div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -196,7 +240,7 @@
 3) Traducción literal al español.  
 4) Explicación breve, clara y sencilla en español.
 
-Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como "Hebreo:", "Transliteración:", "Traducción:", "Explicación:". No agregues más texto.`  
+Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como "Hebreo:", "Transliteración:", "Traducción:", "Explicación:". No agregues más texto.`
         },
         {
           role: "user",
@@ -205,7 +249,7 @@ Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como 
 Hebreo:  
 Transliteración:  
 Traducción:  
-Explicación:`  
+Explicación:`
         }
       ];
 
@@ -236,19 +280,7 @@ Explicación:`
 
         const block = document.createElement("div");
         block.className = "line-block";
-
-        // Extraer solo hebreo para aplicar clase
-        const lines = content.split("\n");
-        let formattedContent = "";
-        for (let line of lines) {
-          if (line.startsWith("Hebreo:")) {
-            formattedContent += `<div class="hebrew-text">${line.replace("Hebreo:", "")}</div>`;
-          } else {
-            formattedContent += line + "<br>";
-          }
-        }
-
-        block.innerHTML = formattedContent;
+        block.innerHTML = content.replace(/\n/g, "<br>");
         output.appendChild(block);
 
         updateProgress();
@@ -256,12 +288,11 @@ Explicación:`
         downloadBtn.disabled = false;
       } catch (e) {
         console.error("Error en nextLine:", e);
-        errorDiv.textContent = "Error al obtener respuesta.";
       }
     }
 
     function updateProgress() {
-      const totalLines = 50; // Ajusta según el Daf real
+      const totalLines = 50; 
       const percent = Math.min(100, Math.floor((currentLine / totalLines) * 100));
       progressBar.style.width = percent + "%";
       progressBar.textContent = percent + "%";
