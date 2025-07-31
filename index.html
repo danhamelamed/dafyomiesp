@@ -27,53 +27,51 @@
 
   <a href="pdfs/56.pdf" target="_blank" download>Descargar PDF completo del Daf 56</a>
 
-<script src="daf/56.js"></script>
-<script>
-  // Código para cargar el Daf, navegar línea a línea, actualizar barra de progreso
+  <script src="daf/56.js"></script>
+  <script>
+    const dafData = window.daf56; // arreglo con el contenido del daf
 
-  const dafData = window.daf56; // el arreglo con líneas, debe estar en daf/56.js
+    let currentIndex = 0;
 
-  let currentIndex = 0;
+    const dafContent = document.getElementById('dafContent');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progress = document.getElementById('progress');
+    const progressText = document.getElementById('progressText');
 
-  const dafContent = document.getElementById('dafContent');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const progress = document.getElementById('progress');
-  const progressText = document.getElementById('progressText');
+    function render() {
+      const segment = dafData[currentIndex];
+      dafContent.innerHTML = `
+        <div class="hebrew">${segment.hebrew}</div>
+        <div class="translation">${segment.translation}</div>
+        <div class="explanation">${segment.explanation}</div>
+      `;
 
-  function render() {
-    const segment = dafData[currentIndex];
-    dafContent.innerHTML = `
-      <div class="hebrew">${segment.hebrew}</div>
-      <div class="translation">${segment.translation}</div>
-      <div class="explanation">${segment.explanation}</div>
-    `;
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex >= dafData.length - 1;
 
-    prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex >= dafData.length - 1;
-
-    const percent = Math.round(((currentIndex + 1) / dafData.length) * 100);
-    progress.style.width = percent + '%';
-    progressText.textContent = \`Progreso: \${percent}% (\${currentIndex + 1} de \${dafData.length})\`;
-  }
-
-  prevBtn.onclick = () => {
-    if (currentIndex > 0) {
-      currentIndex--;
-      render();
+      const percent = Math.round(((currentIndex + 1) / dafData.length) * 100);
+      progress.style.width = percent + '%';
+      progressText.textContent = \`Progreso: \${percent}% (\${currentIndex + 1} de \${dafData.length})\`;
     }
-  };
 
-  nextBtn.onclick = () => {
-    if (currentIndex < dafData.length - 1) {
-      currentIndex++;
-      render();
-    }
-  };
+    prevBtn.onclick = () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        render();
+      }
+    };
 
-  // Inicializar
-  render();
-</script>
+    nextBtn.onclick = () => {
+      if (currentIndex < dafData.length - 1) {
+        currentIndex++;
+        render();
+      }
+    };
+
+    // Inicializa la primera vista
+    render();
+  </script>
 
 </body>
 </html>
