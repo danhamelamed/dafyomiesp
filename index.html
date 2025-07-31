@@ -104,9 +104,9 @@
       allLines.push(answer);
       currentLine += 2;
 
-      const block = document.createElement("div");
-      block.className = "line-block";
-      block.textContent = answer;
+      const  = document.createElement("div");
+      .className = "line-";
+      block.innerHTML = answer.replace(/\n/g, "<br>");
       document.getElementById("output").appendChild(block);
 
       updateProgress();
