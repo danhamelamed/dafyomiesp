@@ -1,29 +1,32 @@
-
 body {
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
   max-width: 700px;
   margin: 40px auto;
   padding: 20px;
-  background-color: #fdfdfd;
+  background-color: #f9f9f9;
   color: #222;
 }
 h1 {
   color: #333366;
+  margin-bottom: 20px;
 }
 .hebrew {
   direction: rtl;
-  font-family: "Arial", serif;
-  font-size: 18px;
-  margin-top: 20px;
-  margin-bottom: 5px;
-}
-.translation, .explanation {
+  font-size: 20px;
+  font-family: "David Libre", serif, "Arial";
   margin-bottom: 10px;
 }
 .translation {
   font-weight: bold;
   color: #003366;
+  margin-bottom: 5px;
 }
 .explanation {
   color: #444;
+  margin-bottom: 20px;
+}
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
 }
