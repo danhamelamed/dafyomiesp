@@ -2,12 +2,78 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Daf Yomi en Español</title>
+  <title>Daf Yomi por Daniel Hamelamed - Guayaquil, Ecuador</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Daf Yomi en Español</h1>
-  <p>Bienvenido al estudio diario del Talmud con traducción y explicación en español.</p>
-  <p><a href="daf/56.html">Ir al Daf Bava Metzia 56</a></p>
+  <h1>Daf Yomi por Daniel Hamelamed - Guayaquil, Ecuador</h1>
+
+  <label for="selectDaf">Selecciona el Daf:</label>
+  <select id="selectDaf">
+    <option value="56">Bava Metzia 56</option>
+  </select>
+
+  <div id="dafContent"></div>
+
+  <button id="prevBtn" disabled>Anterior</button>
+  <button id="nextBtn">Siguiente</button>
+
+  <div id="progressBarContainer" style="margin-top:20px;">
+    <div id="progressBar" style="background:#ccc; width:100%; height:20px; border-radius:10px;">
+      <div id="progress" style="background:#3366cc; height:20px; width:0%; border-radius:10px;"></div>
+    </div>
+    <p id="progressText">Progreso: 0%</p>
+  </div>
+
+  <a href="pdfs/56.pdf" target="_blank" download>Descargar PDF completo del Daf 56</a>
+
+<script src="dafs/56.js"></script>
+<script>
+  // Código para cargar el Daf, navegar línea a línea, actualizar barra de progreso
+
+  const dafData = window.daf56; // el arreglo con líneas, debe estar en dafs/56.js
+
+  let currentIndex = 0;
+
+  const dafContent = document.getElementById('dafContent');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const progress = document.getElementById('progress');
+  const progressText = document.getElementById('progressText');
+
+  function render() {
+    const segment = dafData[currentIndex];
+    dafContent.innerHTML = `
+      <div class="hebrew">${segment.hebrew}</div>
+      <div class="translation">${segment.translation}</div>
+      <div class="explanation">${segment.explanation}</div>
+    `;
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex >= dafData.length - 1;
+
+    const percent = Math.round(((currentIndex + 1) / dafData.length) * 100);
+    progress.style.width = percent + '%';
+    progressText.textContent = \`Progreso: \${percent}% (\${currentIndex + 1} de \${dafData.length})\`;
+  }
+
+  prevBtn.onclick = () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      render();
+    }
+  };
+
+  nextBtn.onclick = () => {
+    if (currentIndex < dafData.length - 1) {
+      currentIndex++;
+      render();
+    }
+  };
+
+  // Inicializar
+  render();
+</script>
+
 </body>
 </html>
