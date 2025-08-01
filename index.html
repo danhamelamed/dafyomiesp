@@ -1,359 +1,138 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
-  <!-- Google Fonts David Libre para hebreo -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=David+Libre&display=swap"
-    rel="stylesheet"
-  />
-  <!-- Tailwind CDN (para producción se recomienda usar build) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
   <style>
-    /* Hebreo grande, negrita y rtl con David Libre */
-    .hebrew-text {
-      font-family: "David Libre", serif;
-      font-size: 2.4rem;
-      font-weight: 700;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.4;
+    }
+    .hebrew {
+      font-size: 1.5rem;
       direction: rtl;
-      unicode-bidi: embed;
-      line-height: 1.15;
-      margin-bottom: 0.2rem;
-      user-select: text;
+      font-weight: bold;
+      font-family: 'Noto Sans Hebrew', 'David Libre', serif;
     }
-    /* Etiquetas en negrita */
-    .label-bold {
-      font-weight: 700;
-      margin-top: 0.25rem;
-      margin-bottom: 0.15rem;
-    }
-    /* Header texto en pequeño y repetido */
-    #talmud-orders-scroll {
-      font-size: 0.7rem;
-      color: #444;
-      white-space: nowrap;
-      overflow-x: auto;
-      scrollbar-width: none; /* Firefox */
-    }
-    #talmud-orders-scroll::-webkit-scrollbar {
-      display: none; /* Chrome y otros */
-    }
-    /* Botón fijo abajo */
-    #next-lines-btn {
+    .progress-bar {
       position: fixed;
-      bottom: 1rem;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 0;
+      left: 0;
+      height: 8px;
+      background-color: #4ade80;
       z-index: 50;
-      width: 90vw;
-      max-width: 400px;
     }
-    /* Espacio para que no tape contenido botón fijo */
-    #bottom-spacer {
-      height: 4.5rem;
+    .talmud-header {
+      font-size: 0.75rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      animation: scroll-left 20s linear infinite;
     }
-    /* Header centrar */
-    header {
-      text-align: center;
+    @keyframes scroll-left {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
     }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-900">
+  <div class="progress-bar" id="progressBar" style="width: 0%"></div>
 
-  <!-- Header con título y línea scroll repetitiva de órdenes del Talmud -->
-  <header class="bg-white shadow p-3 sticky top-0 z-40">
-    <h1
-      class="text-2xl font-bold mb-1 select-none leading-tight"
-      style="line-height:1.2"
-    >
-      Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador
-    </h1>
-    <div
-      id="talmud-orders-scroll"
-      aria-label="Órdenes del Talmud en línea continua"
-      role="contentinfo"
-      tabindex="0"
-    >
-      Seder Zeraim — Seder Moed — Seder Nashim — Seder Nezikin — Seder Kodashim — Seder Taharot — 
-      Seder Zeraim — Seder Moed — Seder Nashim — Seder Nezikin — Seder Kodashim — Seder Taharot — 
-      Seder Zeraim — Seder Moed — Seder Nashim — Seder Nezikin — Seder Kodashim — Seder Taharot — 
-      Seder Zeraim — Seder Moed — Seder Nashim — Seder Nezikin — Seder Kodashim — Seder Taharot
+  <header class="bg-white shadow p-4 text-center relative">
+    <h1 class="text-2xl font-bold">Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
+    <div class="talmud-header absolute bottom-0 left-0 right-0 text-gray-400">
+      Zeraim Nashim Moed Nezikin Kodashim Taharot Zeraim Nashim Moed Nezikin Kodashim Taharot...
     </div>
   </header>
 
-  <main class="flex-grow max-w-4xl mx-auto px-4 pt-5 pb-20 md:pb-10">
-
-    <section class="flex flex-wrap gap-3 items-center mb-5 text-sm md:text-base">
-      <label for="masechet" class="font-semibold block w-full md:w-auto">Masejet:</label>
-      <select
-        id="masechet"
-        class="border border-gray-300 rounded px-3 py-1 w-full md:w-60"
-      >
-        <!-- Orden tradicional y completo -->
-        <option value="Berakhot">Berajot</option>
-        <option value="Shabbat">Shabat</option>
-        <option value="Eruvin">Eruvin</option>
-        <option value="Pesachim">Pesajim</option>
-        <option value="Yoma">Yoma</option>
-        <option value="Sukkah">Suka</option>
-        <option value="Beitzah">Beitzah</option>
-        <option value="Rosh Hashanah">Rosh Hashaná</option>
-        <option value="Taanit">Taanit</option>
-        <option value="Megillah">Meguilá</option>
-        <option value="Moed Katan">Moed Katán</option>
-        <option value="Chagigah">Jagigá</option>
-        <option value="Yevamot">Yevamot</option>
-        <option value="Ketubot">Ketubot</option>
-        <option value="Nedarim">Nedarim</option>
-        <option value="Nazir">Nazir</option>
-        <option value="Sotah">Sotah</option>
-        <option value="Gittin">Gittin</option>
-        <option value="Kiddushin">Kiddushin</option>
-        <option value="Bava Kamma">Bava Kamma</option>
-        <option value="Bava Metzia" selected>Bava Metzia</option>
-        <option value="Bava Batra">Bava Batra</option>
-        <option value="Sanhedrin">Sanhedrin</option>
-        <option value="Makkot">Makkot</option>
-        <option value="Shevuot">Shevuot</option>
-        <option value="Avodah Zarah">Avodá Zará</option>
-        <option value="Horayot">Horayot</option>
-        <option value="Zevachim">Zevajim</option>
-        <option value="Menachot">Menajot</option>
-        <option value="Chullin">Jullin</option>
-        <option value="Bekhorot">Bekhorot</option>
-        <option value="Arakhin">Arakhin</option>
-        <option value="Temurah">Temurah</option>
-        <option value="Keritot">Keritot</option>
-        <option value="Meilah">Meilah</option>
-        <option value="Tamid">Tamid</option>
-        <option value="Middot">Middot</option>
-        <option value="Niddah">Niddah</option>
-      </select>
-
-      <label for="daf-number" class="font-semibold block w-full md:w-auto">Daf:</label>
-      <input
-        type="number"
-        id="daf-number"
-        min="2"
-        max="150"
-        value="2"
-        class="border border-gray-300 rounded px-3 py-1 w-full md:w-20"
-      />
-
-      <button
-        id="load-daf-btn"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded w-full md:w-auto"
-      >
-        Cargar Daf
-      </button>
-
-      <button
-        id="download-pdf-btn"
-        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded w-full md:w-auto"
-        disabled
-      >
-        Descargar PDF
-      </button>
-    </section>
-
-    <div class="w-full bg-gray-300 rounded-full h-5 mb-5 overflow-hidden">
-      <div
-        id="progress-bar"
-        class="bg-blue-600 h-5 rounded-full transition-all duration-300 ease-in-out"
-        style="width: 0%"
-      ></div>
+  <main class="max-w-2xl mx-auto p-4">
+    <div class="mb-4 flex gap-2 flex-wrap">
+      <select id="masechet" class="p-2 border rounded w-full sm:w-auto"></select>
+      <input id="daf" type="number" min="2" value="2" class="p-2 border rounded w-24" />
+      <button onclick="loadFirstLines()" class="bg-blue-600 text-white px-4 py-2 rounded">Cargar Daf</button>
     </div>
 
-    <div id="output" class="space-y-4 text-base leading-snug"></div>
-    <div id="error" class="text-red-600 font-semibold mt-2"></div>
-
+    <div id="dafNumber" class="text-sm text-gray-500 mb-2"></div>
+    <div id="content" class="space-y-4"></div>
+    <button onclick="nextLines()" class="mt-8 bg-green-600 text-white px-4 py-2 rounded block mx-auto">Siguiente línea</button>
+    <button onclick="generatePDF()" class="mt-2 bg-purple-600 text-white px-4 py-2 rounded block mx-auto">Descargar PDF</button>
   </main>
 
-  <button
-    id="next-lines-btn"
-    class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-3 rounded disabled:opacity-50"
-    disabled
-    aria-label="Mostrar siguientes dos líneas"
-  >
-    Siguientes 2 líneas
-  </button>
-
-  <!-- Espacio para que no tape contenido botón fijo -->
-  <div id="bottom-spacer"></div>
-
   <script>
-    let currentIndex = 0;
-    let hebrewLines = [];
-    let masechet = "";
-    let daf = 2;
-
-    const API_URL = "https://dafyomi-api.danfuenteslopez.workers.dev/";
-
-    const outputDiv = document.getElementById("output");
-    const progressBar = document.getElementById("progress-bar");
-    const errorDiv = document.getElementById("error");
-
-    const loadDafBtn = document.getElementById("load-daf-btn");
-    const nextLinesBtn = document.getElementById("next-lines-btn");
-    const downloadPdfBtn = document.getElementById("download-pdf-btn");
-    const masechetSelect = document.getElementById("masechet");
-    const dafInput = document.getElementById("daf-number");
-
-    loadDafBtn.addEventListener("click", async () => {
-      errorDiv.textContent = "";
-      outputDiv.innerHTML = "Cargando texto hebreo desde Sefaria...";
-      masechet = masechetSelect.value;
-      daf = Number(dafInput.value);
-      if (daf < 2) {
-        errorDiv.textContent = "El número de Daf debe ser 2 o mayor.";
-        outputDiv.innerHTML = "";
-        return;
-      }
-      currentIndex = 0;
-      downloadPdfBtn.disabled = true;
-      nextLinesBtn.disabled = false;
-
-      try {
-        const url = `https://www.sefaria.org/api/texts/${encodeURIComponent(
-          masechet
-        )}.${daf}a?lang=he&context=0`;
-        const res = await fetch(url);
-        const data = await res.json();
-
-        if (!data.he || !Array.isArray(data.he)) {
-          throw new Error("No se encontró texto hebreo para este Daf.");
-        }
-
-        hebrewLines = data.he;
-        outputDiv.innerHTML = "";
-        updateProgress();
-        nextLinesBtn.disabled = false;
-        await nextLines();
-      } catch (err) {
-        outputDiv.innerHTML = "";
-        errorDiv.textContent =
-          "Error al obtener texto de Sefaria: " + err.message;
-        nextLinesBtn.disabled = true;
-        downloadPdfBtn.disabled = true;
-      }
+    const masechtot = ["Berajot", "Shabat", "Eruvin", "Pesajim", "Shekalim", "Yoma", "Suká", "Beitzá", "Rosh Hashaná", "Taanit", "Meguilá", "Moed Katán", "Jagigá", "Yevamot", "Ketuvot", "Nedarim", "Nazir", "Sotá", "Guitín", "Kidushín", "Baba Kama", "Baba Metzia", "Baba Batra", "Sanhedrín", "Makot", "Shevuot", "Avodá Zará", "Horaiot", "Zevajim", "Menajot", "Julin", "Bejorot", "Arajín", "Temurá", "Keritot", "Meilá", "Tamid", "Midot", "Kinim", "Nidá"];
+    
+    const masechetSelect = document.getElementById('masechet');
+    masechtot.sort().forEach(m => {
+      const option = document.createElement('option');
+      option.value = m;
+      option.textContent = m;
+      masechetSelect.appendChild(option);
     });
 
-    nextLinesBtn.addEventListener("click", nextLines);
+    let currentIndex = 0;
+    let allLines = [];
+
+    async function loadFirstLines() {
+      const masechet = document.getElementById("masechet").value;
+      const daf = document.getElementById("daf").value;
+      currentIndex = 0;
+      document.getElementById("content").innerHTML = "";
+      document.getElementById("dafNumber").innerText = `Daf ${daf} - ${masechet}`;
+      
+      const sefariaUrl = `https://www.sefaria.org/api/texts/${masechet}.${daf}?lang=he&context=0`;
+      const response = await fetch(sefariaUrl);
+      const data = await response.json();
+
+      allLines = data.he.filter(line => line.trim() !== "");
+      nextLines();
+    }
 
     async function nextLines() {
-      errorDiv.textContent = "";
+      if (currentIndex >= allLines.length) return;
 
-      const lines = hebrewLines.slice(currentIndex, currentIndex + 2);
-      if (lines.length === 0) {
-        nextLinesBtn.disabled = true;
-        return;
-      }
-
-      const textToSend = lines.join("\n");
+      const linesToShow = allLines.slice(currentIndex, currentIndex + 2);
       currentIndex += 2;
-
       updateProgress();
 
-      const messages = [
-        {
-          role: "system",
-          content: `Eres un traductor y comentarista experto en Guemará. Para cada segmento que te pida, devuelve en este orden, claramente separados:
-1) Texto original en hebreo (solo hebreo, sin transliteración ni traducción).
-2) Transliteración fonética del hebreo.
-3) Traducción literal al español.
-4) Explicación breve, clara y sencilla en español.
-Usa formato limpio, con cada parte separada por líneas nuevas y etiquetas como "Hebreo:", "Transliteración:", "Traducción:", "Explicación:". No agregues más texto.`
-        },
-        {
-          role: "user",
-          content: `Por favor, traduce y explica este texto:
-${textToSend}`
-        }
-      ];
+      const hebrewText = linesToShow.join("\n");
+      const res = await fetch("https://dafyomi-api.danfuenteslopez.workers.dev/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: `Explica en español las siguientes líneas del Talmud de forma clara y breve. Incluye: traducción literal, transliteración aproximada, y explicación sencilla para cada una. No uses material fuera de este Daf.\n\n${hebrewText}` })
+      });
+      const { result } = await res.json();
 
-      try {
-        const response = await fetch(API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ messages })
-        });
-
-        if (!response.ok) {
-          throw new Error(
-            `Error en la respuesta: ${response.status} ${response.statusText}`
-          );
-        }
-
-        const data = await response.json();
-
-        const content = data.choices?.[0]?.message?.content;
-        if (!content) {
-          throw new Error("Respuesta del API vacía o incorrecta");
-        }
-
-        const container = document.createElement("div");
-        container.classList.add(
-          "p-4",
-          "bg-white",
-          "rounded",
-          "shadow",
-          "space-y-2",
-          "break-words"
-        );
-
-        container.innerHTML = content
-          .replace(
-            /Hebreo:/g,
-            '<div class="label-bold hebrew-text">Hebreo:</div>'
-          )
-          .replace(
-            /Transliteraci[oó]n:/g,
-            '<div class="label-bold">Transliteración:</div>'
-          )
-          .replace(
-            /Traducci[oó]n:/g,
-            '<div class="label-bold">Traducción:</div>'
-          )
-          .replace(
-            /Explicaci[oó]n:/g,
-            '<div class="label-bold">Explicación:</div>'
-          )
-          .replace(/\n/g, "<br>");
-
-        outputDiv.appendChild(container);
-
-        downloadPdfBtn.disabled = false;
-      } catch (error) {
-        errorDiv.textContent = error.message;
-        console.error("Error en nextLines:", error);
-      }
+      const block = document.createElement("div");
+      block.innerHTML = `
+        <div class="hebrew">${hebrewText}</div>
+        <div class="bg-white p-4 shadow rounded">
+          ${result.replace(/\n/g, "<br>")}
+        </div>
+      `;
+      document.getElementById("content").appendChild(block);
     }
 
     function updateProgress() {
-      const percent = Math.min(
-        100,
-        Math.floor((currentIndex / hebrewLines.length) * 100)
-      );
-      progressBar.style.width = `${percent}%`;
-      progressBar.textContent = `${percent}%`;
+      const progress = Math.min((currentIndex / allLines.length) * 100, 100);
+      document.getElementById("progressBar").style.width = `${progress}%`;
     }
 
-    downloadPdfBtn.addEventListener("click", () => {
-      const element = outputDiv;
-      const opt = {
-        margin: 0.5,
-        filename: `${masechet.replace(/\s/g, "_")}_Daf_${daf}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
-      };
-      html2pdf().from(element).set(opt).save();
-    });
+    async function generatePDF() {
+      const content = document.getElementById("content").innerHTML;
+      const html = `
+        <html><head><meta charset='utf-8'></head><body>${content}</body></html>
+      `;
+      const blob = new Blob([html], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "dafyomi.pdf";
+      a.click();
+    }
+
+    loadFirstLines();
   </script>
 </body>
 </html>
