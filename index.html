@@ -1,138 +1,135 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.4;
+      font-family: Arial, sans-serif;
     }
     .hebrew {
-      font-size: 1.5rem;
       direction: rtl;
       font-weight: bold;
-      font-family: 'Noto Sans Hebrew', 'David Libre', serif;
+      font-family: "David Libre", serif;
     }
-    .progress-bar {
+    .floating-progress {
       position: fixed;
       top: 0;
       left: 0;
-      height: 8px;
-      background-color: #4ade80;
+      width: 100%;
+      background-color: #e5e7eb;
       z-index: 50;
     }
-    .talmud-header {
-      font-size: 0.75rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      animation: scroll-left 20s linear infinite;
-    }
-    @keyframes scroll-left {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
+    .progress-bar {
+      height: 6px;
+      background-color: #2563eb;
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
-  <div class="progress-bar" id="progressBar" style="width: 0%"></div>
 
-  <header class="bg-white shadow p-4 text-center relative">
-    <h1 class="text-2xl font-bold">Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
-    <div class="talmud-header absolute bottom-0 left-0 right-0 text-gray-400">
-      Zeraim Nashim Moed Nezikin Kodashim Taharot Zeraim Nashim Moed Nezikin Kodashim Taharot...
+<body class="bg-gray-100">
+  <div class="floating-progress">
+    <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+  </div>
+
+  <header class="text-center p-4 bg-white shadow">
+    <h1 class="text-xl font-bold">Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
+    <div class="text-[10px] text-gray-400 whitespace-nowrap overflow-hidden">
+      <span class="inline-block animate-marquee">
+        Zeraim Nashim Nezikin Kodashim Taharot Moed Zeraim Nashim Nezikin Kodashim Taharot Moed Zeraim Nashim Nezikin Kodashim Taharot Moed
+      </span>
     </div>
   </header>
 
   <main class="max-w-2xl mx-auto p-4">
-    <div class="mb-4 flex gap-2 flex-wrap">
-      <select id="masechet" class="p-2 border rounded w-full sm:w-auto"></select>
-      <input id="daf" type="number" min="2" value="2" class="p-2 border rounded w-24" />
-      <button onclick="loadFirstLines()" class="bg-blue-600 text-white px-4 py-2 rounded">Cargar Daf</button>
+    <div class="flex gap-2 mb-4">
+      <select id="masechetSelect" class="p-2 rounded border border-gray-300">
+        <option>Brajot</option>
+        <option>Shabat</option>
+        <option>Eruvin</option>
+        <option>Pesajim</option>
+        <option>Shekalim</option>
+        <option>Yoma</option>
+        <option>Suca</option>
+        <option>Beitza</option>
+        <option>Rosh Hashaná</option>
+        <option>Ta'anit</option>
+        <option>Meguilá</option>
+        <option>Moed Katan</option>
+        <option>Jaguigá</option>
+        <option>Yevamot</option>
+        <option>Ketuvot</option>
+        <option>Nedarin</option>
+        <option>Nazir</option>
+        <option>Sotá</option>
+        <option>Guitin</option>
+        <option>Kidushin</option>
+        <option>Baba Kama</option>
+        <option>Baba Metzia</option>
+        <option>Baba Batra</option>
+        <option>Sanedrín</option>
+      </select>
+      <input id="dafInput" type="number" class="w-20 p-2 rounded border border-gray-300" placeholder="Daf" value="2">
+      <button onclick="loadFirstLines()" class="px-4 py-2 bg-blue-600 text-white rounded">Cargar</button>
     </div>
 
-    <div id="dafNumber" class="text-sm text-gray-500 mb-2"></div>
-    <div id="content" class="space-y-4"></div>
-    <button onclick="nextLines()" class="mt-8 bg-green-600 text-white px-4 py-2 rounded block mx-auto">Siguiente línea</button>
-    <button onclick="generatePDF()" class="mt-2 bg-purple-600 text-white px-4 py-2 rounded block mx-auto">Descargar PDF</button>
+    <div id="content" class="space-y-6"></div>
+    <button onclick="nextLines()" class="mt-8 block mx-auto px-4 py-2 bg-green-600 text-white rounded">Siguiente línea</button>
   </main>
 
   <script>
-    const masechtot = ["Berajot", "Shabat", "Eruvin", "Pesajim", "Shekalim", "Yoma", "Suká", "Beitzá", "Rosh Hashaná", "Taanit", "Meguilá", "Moed Katán", "Jagigá", "Yevamot", "Ketuvot", "Nedarim", "Nazir", "Sotá", "Guitín", "Kidushín", "Baba Kama", "Baba Metzia", "Baba Batra", "Sanhedrín", "Makot", "Shevuot", "Avodá Zará", "Horaiot", "Zevajim", "Menajot", "Julin", "Bejorot", "Arajín", "Temurá", "Keritot", "Meilá", "Tamid", "Midot", "Kinim", "Nidá"];
-    
-    const masechetSelect = document.getElementById('masechet');
-    masechtot.sort().forEach(m => {
-      const option = document.createElement('option');
-      option.value = m;
-      option.textContent = m;
-      masechetSelect.appendChild(option);
-    });
-
+    let currentLines = [];
     let currentIndex = 0;
-    let allLines = [];
+    let selectedMasechet = '';
+    let selectedDaf = '';
 
     async function loadFirstLines() {
-      const masechet = document.getElementById("masechet").value;
-      const daf = document.getElementById("daf").value;
-      currentIndex = 0;
-      document.getElementById("content").innerHTML = "";
-      document.getElementById("dafNumber").innerText = `Daf ${daf} - ${masechet}`;
-      
-      const sefariaUrl = `https://www.sefaria.org/api/texts/${masechet}.${daf}?lang=he&context=0`;
-      const response = await fetch(sefariaUrl);
+      selectedMasechet = document.getElementById('masechetSelect').value;
+      selectedDaf = document.getElementById('dafInput').value;
+
+      const response = await fetch(`https://www.sefaria.org/api/texts/${selectedMasechet}.${selectedDaf}?lang=he`);
       const data = await response.json();
 
-      allLines = data.he.filter(line => line.trim() !== "");
+      const rawLines = Array.isArray(data.he) ? data.he : [];
+      const lines = rawLines.filter(line => typeof line === 'string' && line.trim() !== '');
+
+      currentLines = lines;
+      currentIndex = 0;
+      document.getElementById('content').innerHTML = '';
       nextLines();
     }
 
     async function nextLines() {
-      if (currentIndex >= allLines.length) return;
-
-      const linesToShow = allLines.slice(currentIndex, currentIndex + 2);
+      const contentDiv = document.getElementById('content');
+      const line1 = currentLines[currentIndex] || '';
+      const line2 = currentLines[currentIndex + 1] || '';
       currentIndex += 2;
-      updateProgress();
 
-      const hebrewText = linesToShow.join("\n");
-      const res = await fetch("https://dafyomi-api.danfuenteslopez.workers.dev/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: `Explica en español las siguientes líneas del Talmud de forma clara y breve. Incluye: traducción literal, transliteración aproximada, y explicación sencilla para cada una. No uses material fuera de este Daf.\n\n${hebrewText}` })
+      const response = await fetch('https://dafyomi-api.danfuenteslopez.workers.dev/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `Explica y traduce en español estas dos líneas del Talmud ${selectedMasechet} ${selectedDaf}:\n\n${line1}\n${line2}`
+        })
       });
-      const { result } = await res.json();
 
-      const block = document.createElement("div");
+      const result = await response.json();
+      const explanation = result.text || 'No se pudo generar explicación.';
+
+      const block = document.createElement('div');
       block.innerHTML = `
-        <div class="hebrew">${hebrewText}</div>
-        <div class="bg-white p-4 shadow rounded">
-          ${result.replace(/\n/g, "<br>")}
-        </div>
+        <div class="hebrew text-right text-lg">${line1}<br>${line2}</div>
+        <div class="mt-2">${explanation}</div>
       `;
-      document.getElementById("content").appendChild(block);
-    }
 
-    function updateProgress() {
-      const progress = Math.min((currentIndex / allLines.length) * 100, 100);
-      document.getElementById("progressBar").style.width = `${progress}%`;
-    }
+      contentDiv.appendChild(block);
 
-    async function generatePDF() {
-      const content = document.getElementById("content").innerHTML;
-      const html = `
-        <html><head><meta charset='utf-8'></head><body>${content}</body></html>
-      `;
-      const blob = new Blob([html], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "dafyomi.pdf";
-      a.click();
+      const progress = Math.min((currentIndex / currentLines.length) * 100, 100);
+      document.getElementById('progressBar').style.width = progress + '%';
     }
-
-    loadFirstLines();
   </script>
 </body>
 </html>
