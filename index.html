@@ -58,12 +58,16 @@
     <script>
       let currentIndex = 0;
       let hebrewLines = [];
+      let masechetGlobal = '';
+      let dafGlobal = '';
 
       async function loadDaf() {
         const masechet = document.getElementById('masechet').value;
         const daf = document.getElementById('daf-number').value;
         if (!masechet || !daf) return;
 
+        masechetGlobal = masechet;
+        dafGlobal = daf;
         currentIndex = 0;
         document.getElementById("output").innerHTML = "Cargando...";
         const url = `https://www.sefaria.org/api/texts/${masechet}.${daf}a?lang=he&context=0`;
@@ -71,7 +75,7 @@
         try {
           const response = await fetch(url);
           const data = await response.json();
-          hebrewLines = data.he;
+          hebrewLines = data.he.filter(line => line.trim().length > 0);
           document.getElementById("output").innerHTML = "";
           nextLines();
         } catch (error) {
@@ -84,16 +88,16 @@
         if (lines.length === 0) return;
 
         const textToSend = lines.join("\n");
-        currentIndex += 2;
+        currentIndex += lines.length;
 
         document.getElementById("progress-bar").style.width = `${(currentIndex / hebrewLines.length) * 100}%`;
 
-        const prompt = `Traduce y explica las siguientes líneas del Talmud. Devuelve solo:
+        const prompt = `Estamos estudiando el Talmud en español. A continuación te daré parte del texto en hebreo del tratado de ${masechetGlobal}, daf ${dafGlobal} lado A. Devuelve únicamente lo siguiente por cada línea:
 
-1. Texto en hebreo
-2. Transliteración (fonética)
-3. Traducción al español
-4. Pequeña explicación en español
+1. Texto original en hebreo
+2. Transliteración fonética
+3. Traducción literal al español
+4. Explicación breve y clara en español, ideal para principiantes.
 
 Texto:
 ${textToSend}`;
