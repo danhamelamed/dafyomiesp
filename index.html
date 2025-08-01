@@ -4,28 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
+  <!-- Google Fonts David Libre para hebreo -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=David+Libre&display=swap"
+    rel="stylesheet"
+  />
   <!-- Tailwind CDN (para producción se recomienda usar build) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
   <style>
-    /* Hebreo grande, negrita y rtl */
+    /* Hebreo grande, negrita y rtl con David Libre */
     .hebrew-text {
-      font-size: 2.5rem;
-      font-weight: 900;
+      font-family: "David Libre", serif;
+      font-size: 2.4rem;
+      font-weight: 700;
       direction: rtl;
       unicode-bidi: embed;
-      font-family: "SBL Hebrew", "David Libre", "Times New Roman", serif;
-      line-height: 1.2;
-      margin-bottom: 0.3rem;
+      line-height: 1.15;
+      margin-bottom: 0.2rem;
+      user-select: text;
     }
     /* Etiquetas en negrita */
     .label-bold {
       font-weight: 700;
-      margin-top: 0.5rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.15rem;
     }
     /* Header texto en pequeño y repetido */
     #talmud-orders-scroll {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #444;
       white-space: nowrap;
       overflow-x: auto;
@@ -44,20 +51,32 @@
       width: 90vw;
       max-width: 400px;
     }
-    /* Para espacio extra debajo */
+    /* Espacio para que no tape contenido botón fijo */
     #bottom-spacer {
       height: 4.5rem;
+    }
+    /* Header centrar */
+    header {
+      text-align: center;
     }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
   <!-- Header con título y línea scroll repetitiva de órdenes del Talmud -->
-  <header class="bg-white shadow p-4 sticky top-0 z-40">
-    <h1 class="text-2xl font-bold mb-1 select-none">
+  <header class="bg-white shadow p-3 sticky top-0 z-40">
+    <h1
+      class="text-2xl font-bold mb-1 select-none leading-tight"
+      style="line-height:1.2"
+    >
       Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador
     </h1>
-    <div id="talmud-orders-scroll" aria-label="Órdenes del Talmud en línea continua" role="contentinfo" tabindex="0">
+    <div
+      id="talmud-orders-scroll"
+      aria-label="Órdenes del Talmud en línea continua"
+      role="contentinfo"
+      tabindex="0"
+    >
       Seder Zeraim — Seder Moed — Seder Nashim — Seder Nezikin — Seder Kodashim — Seder Taharot — 
       Seder Zeraim — Seder Moed — Seder Nashim — Seder Nezikin — Seder Kodashim — Seder Taharot — 
       Seder Zeraim — Seder Moed — Seder Nashim — Seder Nezikin — Seder Kodashim — Seder Taharot — 
@@ -65,11 +84,14 @@
     </div>
   </header>
 
-  <main class="flex-grow max-w-4xl mx-auto px-4 pt-6 pb-20 md:pb-10">
+  <main class="flex-grow max-w-4xl mx-auto px-4 pt-5 pb-20 md:pb-10">
 
-    <section class="flex flex-wrap gap-4 items-center mb-6">
+    <section class="flex flex-wrap gap-3 items-center mb-5 text-sm md:text-base">
       <label for="masechet" class="font-semibold block w-full md:w-auto">Masejet:</label>
-      <select id="masechet" class="border border-gray-300 rounded px-3 py-2 w-full md:w-60">
+      <select
+        id="masechet"
+        class="border border-gray-300 rounded px-3 py-1 w-full md:w-60"
+      >
         <!-- Orden tradicional y completo -->
         <option value="Berakhot">Berajot</option>
         <option value="Shabbat">Shabat</option>
@@ -118,7 +140,7 @@
         min="2"
         max="150"
         value="2"
-        class="border border-gray-300 rounded px-3 py-2 w-full md:w-20"
+        class="border border-gray-300 rounded px-3 py-1 w-full md:w-20"
       />
 
       <button
@@ -137,7 +159,7 @@
       </button>
     </section>
 
-    <div class="w-full bg-gray-300 rounded-full h-5 mb-6 overflow-hidden">
+    <div class="w-full bg-gray-300 rounded-full h-5 mb-5 overflow-hidden">
       <div
         id="progress-bar"
         class="bg-blue-600 h-5 rounded-full transition-all duration-300 ease-in-out"
@@ -145,8 +167,8 @@
       ></div>
     </div>
 
-    <div id="output" class="space-y-8 text-lg leading-relaxed"></div>
-    <div id="error" class="text-red-600 font-semibold mt-4"></div>
+    <div id="output" class="space-y-4 text-base leading-snug"></div>
+    <div id="error" class="text-red-600 font-semibold mt-2"></div>
 
   </main>
 
@@ -276,11 +298,11 @@ ${textToSend}`
 
         const container = document.createElement("div");
         container.classList.add(
-          "p-6",
+          "p-4",
           "bg-white",
           "rounded",
           "shadow",
-          "space-y-4",
+          "space-y-2",
           "break-words"
         );
 
