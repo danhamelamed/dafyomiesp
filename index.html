@@ -26,7 +26,7 @@
       <main class="p-6 col-span-4">
         <h1 class="text-3xl font-bold mb-4">Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
 
-        <div class="flex gap-4 mb-6">
+        <div class="flex gap-4 mb-6 flex-wrap">
           <select id="masechet" class="border p-2 rounded">
             <option value="Bava Metzia">Bava Metzia</option>
             <option value="Berajot">Berajot</option>
@@ -41,10 +41,10 @@
             <option value="Meguilá">Meguilá</option>
             <option value="Moed Katan">Moed Katan</option>
             <option value="Jaguigá">Jaguigá</option>
-            <!-- Puedes añadir más -->
           </select>
           <input type="number" id="daf" class="border p-2 rounded w-24" placeholder="Daf" />
           <button onclick="start()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Comenzar</button>
+          <button onclick="loadNextPage()" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded">Siguiente</button>
           <button onclick="downloadPDF()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Descargar PDF</button>
         </div>
 
@@ -56,14 +56,15 @@
       let offset = 0;
 
       async function start() {
-        const masechet = document.getElementById("masechet").value;
-        const daf = document.getElementById("daf").value;
         offset = 0;
         document.getElementById("output").innerHTML = "";
-        await loadNext(masechet, daf);
+        await loadNextPage();
       }
 
-      async function loadNext(masechet, daf) {
+      async function loadNextPage() {
+        const masechet = document.getElementById("masechet").value;
+        const daf = document.getElementById("daf").value;
+
         const res = await fetch("https://dafyomi-api.danfuenteslopez.workers.dev/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -71,14 +72,14 @@
             messages: [
               {
                 role: "user",
-                content: `Actúa como un maestro de Daf Yomi. Muestra el Daf ${daf} del tratado ${masechet} del Talmud babilónico. Divide el contenido en segmentos de 2 líneas del Talmud. Por cada segmento incluye:
+                content: `Actúa como un maestro de Daf Yomi. Muestra el Daf ${daf} del tratado ${masechet} del Talmud babilónico. Usa exclusivamente el contenido auténtico del Daf ${daf} sin agregar Baraitot o comentarios ajenos. Divide el contenido en segmentos de 2 líneas del Talmud. Por cada segmento incluye:
 
 1. El texto original en hebreo (grande y en negrita).
 2. La transliteración.
 3. Traducción textual.
 4. Una pequeña explicación en español.
 
-No incluyas otra información adicional. Solo responde con el contenido del Daf ${daf} del tratado ${masechet}, comenzando desde el principio. Este es el grupo número ${offset}.`,
+Este es el grupo número ${offset}.`,
               },
             ],
           }),
@@ -105,7 +106,7 @@ No incluyas otra información adicional. Solo responde con el contenido del Daf 
         return lines
           .map((line) => {
             if (line.match(/^.*[א-ת]+.*$/)) {
-              return `<p class='text-2xl font-bold text-right'>${line}</p>`;
+              return `<p class='text-2xl font-bold text-right leading-relaxed'>${line}</p>`;
             } else if (line.toLowerCase().includes("transliteración") || line.toLowerCase().includes("transliteracion")) {
               return `<p><strong>${line}</strong></p>`;
             } else if (line.toLowerCase().includes("traducción") || line.toLowerCase().includes("traduccion")) {
@@ -120,9 +121,7 @@ No incluyas otra información adicional. Solo responde con el contenido del Daf 
 
       document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowDown") {
-          const masechet = document.getElementById("masechet").value;
-          const daf = document.getElementById("daf").value;
-          loadNext(masechet, daf);
+          loadNextPage();
         }
       });
 
@@ -132,7 +131,7 @@ No incluyas otra información adicional. Solo responde con el contenido del Daf 
           margin: 0.5,
           filename: 'Daf-Yomi.pdf',
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
+          html2canvas: { scale: 3, useCORS: true },
           jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
         };
         html2pdf().set(opt).from(element).save();
