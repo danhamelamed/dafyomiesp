@@ -1,233 +1,142 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" />
-  <style>
-    body {
-      font-family: 'Assistant', sans-serif;
-      display: flex;
-      margin: 0;
-      background-color: #f7f7f7;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-neutral-100 text-gray-900 font-sans">
+    <div class="grid grid-cols-5 min-h-screen">
+      <!-- Sidebar -->
+      <aside class="bg-gray-800 text-white p-4 col-span-1">
+        <h2 class="text-xl font-bold mb-4">Órdenes del Talmud</h2>
+        <ul class="space-y-2 text-sm">
+          <li>Seder Zeraim</li>
+          <li>Seder Moed</li>
+          <li>Seder Nashim</li>
+          <li>Seder Nezikin</li>
+          <li>Seder Kodashim</li>
+          <li>Seder Taharot</li>
+        </ul>
+      </aside>
 
-    aside {
-      background-color: #16202A;
-      color: #fff;
-      padding: 1em;
-      width: 250px;
-      min-height: 100vh;
-    }
+      <!-- Main content -->
+      <main class="p-6 col-span-4">
+        <h1 class="text-3xl font-bold mb-4">Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
 
-    aside h2 {
-      font-size: 1.2em;
-      margin-bottom: 0.5em;
-    }
+        <div class="flex gap-4 mb-6">
+          <select id="masechet" class="border p-2 rounded">
+            <option value="Bava Metzia">Bava Metzia</option>
+            <option value="Berajot">Berajot</option>
+            <option value="Shabat">Shabat</option>
+            <option value="Eruvin">Eruvin</option>
+            <option value="Pesajim">Pesajim</option>
+            <option value="Yoma">Yoma</option>
+            <option value="Suká">Suká</option>
+            <option value="Beitzá">Beitzá</option>
+            <option value="Rosh Hashaná">Rosh Hashaná</option>
+            <option value="Taanit">Taanit</option>
+            <option value="Meguilá">Meguilá</option>
+            <option value="Moed Katan">Moed Katan</option>
+            <option value="Jaguigá">Jaguigá</option>
+            <!-- Puedes añadir más -->
+          </select>
+          <input type="number" id="daf" class="border p-2 rounded w-24" placeholder="Daf" />
+          <button onclick="start()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Comenzar</button>
+          <button onclick="downloadPDF()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Descargar PDF</button>
+        </div>
 
-    aside ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    aside li {
-      margin-bottom: 0.5em;
-      cursor: pointer;
-    }
-
-    main {
-      flex: 1;
-      padding: 2em;
-    }
-
-    h1 {
-      font-size: 1.8em;
-      margin-bottom: 1em;
-    }
-
-    select, button {
-      padding: 0.6em;
-      font-size: 1em;
-      margin: 0.5em;
-    }
-
-    .output {
-      background-color: #fff;
-      padding: 1.5em;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-top: 1em;
-    }
-
-    .section {
-      margin-bottom: 1.5em;
-    }
-
-    .section h3 {
-      margin-bottom: 0.3em;
-      font-size: 1.1em;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .hebrew {
-      font-size: 2em;
-      font-weight: bold;
-      direction: rtl;
-      margin-bottom: 0.5em;
-    }
-
-    .image-bar {
-      display: flex;
-      gap: 0.5em;
-      margin-top: 1em;
-    }
-
-    .image-bar img {
-      height: 40px;
-    }
-  </style>
-</head>
-<body>
-  <aside>
-    <h2>Órdenes del Talmud</h2>
-    <ul>
-      <li>Zeraim</li>
-      <li>Moed</li>
-      <li>Nashim</li>
-      <li>Nezikin</li>
-      <li>Kodashim</li>
-      <li>Tahorot</li>
-    </ul>
-  </aside>
-  <main>
-    <h1>Daf Yomi por Daniel Hamelamed - Guayaquil Ecuador</h1>
-
-    <label for="masechet">Masejet:</label>
-    <select id="masechet">
-      <option>Brachot</option>
-      <option>Shabbat</option>
-      <option>Eruvin</option>
-      <option>Pesachim</option>
-      <option>Yoma</option>
-      <option>Sukkah</option>
-      <option>Beitzah</option>
-      <option>Rosh Hashanah</option>
-      <option>Taanit</option>
-      <option>Megillah</option>
-      <option>Moed Katan</option>
-      <option>Chagigah</option>
-      <option>Yevamot</option>
-      <option>Ketubot</option>
-      <option>Nedarim</option>
-      <option>Nazir</option>
-      <option>Sotah</option>
-      <option>Gittin</option>
-      <option>Kiddushin</option>
-      <option>Bava Kamma</option>
-      <option>Bava Metzia</option>
-      <option>Bava Batra</option>
-      <option>Sanhedrin</option>
-      <option>Makkot</option>
-      <option>Shevuot</option>
-      <option>Avodah Zarah</option>
-      <option>Horayot</option>
-      <option>Zevachim</option>
-      <option>Menachot</option>
-      <option>Chullin</option>
-      <option>Bechorot</option>
-      <option>Arachin</option>
-      <option>Temurah</option>
-      <option>Keritot</option>
-      <option>Meilah</option>
-      <option>Tamid</option>
-      <option>Midot</option>
-      <option>Kinnim</option>
-      <option>Niddah</option>
-    </select>
-
-    <label for="daf">Daf:</label>
-    <input id="daf" type="number" min="2" max="200" />
-
-    <button onclick="startDaf()">Comenzar</button>
-    <button onclick="nextLine()">Siguiente línea</button>
-
-    <div class="output" id="output">
-      <div class="image-bar">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Tav.svg/800px-Tav.svg.png" alt="Letra Tav">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Shin.svg/800px-Shin.svg.png" alt="Letra Shin">
-      </div>
+        <div id="output" class="space-y-6 bg-white p-4 rounded shadow-lg max-w-4xl" dir="rtl"></div>
+      </main>
     </div>
-  </main>
 
-  <script>
-    let currentMessages = [];
+    <script>
+      let offset = 0;
 
-    function buildPrompt(masechet, daf) {
-      return `Estoy estudiando el Talmud. Quiero que actúes como un maestro del Daf Yomi. El tratado es ${masechet} y el Daf es ${daf}. Comienza con solo las primeras DOS líneas del Daf original. Dame:
+      async function start() {
+        const masechet = document.getElementById("masechet").value;
+        const daf = document.getElementById("daf").value;
+        offset = 0;
+        document.getElementById("output").innerHTML = "";
+        await loadNext(masechet, daf);
+      }
 
-1. El texto en HEBREO original (grande y en negrita).
-2. La transliteración.
-3. Traducción literal al español.
-4. Una breve explicación clara y accesible.
-
-No avances a más líneas hasta que lo solicite. Asegúrate de que el texto corresponda exactamente a ${masechet} ${daf}.`;
-    }
-
-    async function startDaf() {
-      const masechet = document.getElementById("masechet").value;
-      const daf = document.getElementById("daf").value;
-      currentMessages = [{ role: "user", content: buildPrompt(masechet, daf) }];
-      await getLine();
-    }
-
-    async function nextLine() {
-      currentMessages.push({ role: "user", content: "Ahora dame las próximas DOS líneas con el mismo formato, sin repetir lo anterior." });
-      await getLine();
-    }
-
-    async function getLine() {
-      const output = document.getElementById("output");
-      output.innerHTML = "Cargando...";
-
-      try {
+      async function loadNext(masechet, daf) {
         const res = await fetch("https://dafyomi-api.danfuenteslopez.workers.dev/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: currentMessages })
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "user",
+                content: `Actúa como un maestro de Daf Yomi. Muestra el Daf ${daf} del tratado ${masechet} del Talmud babilónico. Divide el contenido en segmentos de 2 líneas del Talmud. Por cada segmento incluye:
+
+1. El texto original en hebreo (grande y en negrita).
+2. La transliteración.
+3. Traducción textual.
+4. Una pequeña explicación en español.
+
+No incluyas otra información adicional. Solo responde con el contenido del Daf ${daf} del tratado ${masechet}, comenzando desde el principio. Este es el grupo número ${offset}.`,
+              },
+            ],
+          }),
         });
 
-        if (!res.ok) throw new Error("Error al obtener datos del servidor");
-
         const data = await res.json();
-        const text = data.choices?.[0]?.message?.content || "Respuesta vacía";
-        output.innerHTML = parseFormattedText(text);
-      } catch (err) {
-        output.innerHTML = `<strong>Error al obtener datos:</strong> ${err.message}`;
-      }
-    }
+        const text = data.choices?.[0]?.message?.content;
+        if (!text) return alert("Error al obtener respuesta");
 
-    function parseFormattedText(text) {
-      const lines = text.split("\n").filter(line => line.trim() !== "");
-      let html = "";
+        const container = document.getElementById("output");
+        const parts = text.split(/\n\n+/);
 
-      for (const line of lines) {
-        if (line.includes("Hebreo") || line.startsWith("1.")) {
-          html += `<div class="section"><h3>Texto en Hebreo</h3><div class="hebrew">${line.replace(/^1\.\s*/, "")}</div></div>`;
-        } else if (line.includes("Transliteración") || line.startsWith("2.")) {
-          html += `<div class="section"><h3>Transliteración</h3><p>${line.replace(/^2\.\s*/, "")}</p></div>`;
-        } else if (line.includes("Traducción") || line.startsWith("3.")) {
-          html += `<div class="section"><h3>Traducción</h3><p>${line.replace(/^3\.\s*/, "")}</p></div>`;
-        } else if (line.includes("Explicación") || line.startsWith("4.")) {
-          html += `<div class="section"><h3>Explicación</h3><p>${line.replace(/^4\.\s*/, "")}</p></div>`;
-        } else {
-          html += `<p>${line}</p>`;
+        for (const part of parts) {
+          const div = document.createElement("div");
+          div.innerHTML = formatBlock(part);
+          container.appendChild(div);
         }
+
+        offset++;
       }
 
-      return html;
-    }
-  </script>
-</body>
+      function formatBlock(text) {
+        const lines = text.split(/\n+/);
+        return lines
+          .map((line) => {
+            if (line.match(/^.*[א-ת]+.*$/)) {
+              return `<p class='text-2xl font-bold text-right'>${line}</p>`;
+            } else if (line.toLowerCase().includes("transliteración") || line.toLowerCase().includes("transliteracion")) {
+              return `<p><strong>${line}</strong></p>`;
+            } else if (line.toLowerCase().includes("traducción") || line.toLowerCase().includes("traduccion")) {
+              return `<p><strong>${line}</strong></p>`;
+            } else if (line.toLowerCase().includes("explicación") || line.toLowerCase().includes("explicacion")) {
+              return `<p><strong>${line}</strong></p>`;
+            }
+            return `<p>${line}</p>`;
+          })
+          .join("");
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown") {
+          const masechet = document.getElementById("masechet").value;
+          const daf = document.getElementById("daf").value;
+          loadNext(masechet, daf);
+        }
+      });
+
+      function downloadPDF() {
+        const element = document.getElementById("output");
+        const opt = {
+          margin: 0.5,
+          filename: 'Daf-Yomi.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        };
+        html2pdf().set(opt).from(element).save();
+      }
+    </script>
+  </body>
 </html>
